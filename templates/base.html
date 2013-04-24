@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="{{ STATIC_URL }}style.css">
+  <link href='http://fonts.googleapis.com/css?family=Merriweather+Sans|Merienda'
+	rel='stylesheet' type='text/css'>
+  <script src="{{ STATIC_URL }}jquery-1.9.1.min.js"></script>
+  <script src="{{ STATIC_URL }}jquery.masonry.min.js"></script>
+  <title>Recepten database</title>
+</head>
+<body>
+  <header>
+    <div class="wrapper">
+      <img src="{{ STATIC_URL }}graphics/logo.jpg" style="max-height: 50px">
+      <span class="title">Recepten database</span>
+      {% block login %}
+      <span><a href="/">Home</a></span>
+      <span class="spacing"><a href="/toevoegen">Recept toevoegen</a></span>
+      <form action="/logoutview">
+        <input type="submit" id="btnLogout" value="Log out">
+      </form>
+      {% endblock %}
+    </div>
+  </header>
+  <div id="content">
+    <div class="wrapper">
+            {% block content %}
+            {% endblock %}
+    </div>
+  </div>
+  <footer>
+        <div class="wrapper">
+            Built by: San Gillis and Joris Gillis
+        </div>
+  </footer>
+</body>
+</html>

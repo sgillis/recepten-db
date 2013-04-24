@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="panel left">
+<h1>Recept {{ recept.naam }}</h1>
+
+{% for foto in recept.fotos.all %}
+<div>
+<img src={{ MEDIA_URL }}{{ foto.image.name }} width=250 style="float: center"/>
+</div>
+{% endfor %}
+
+<div style="clear: both;">
+<ul>
+  <li>Door: {{ recept.user.username }}</li>
+  <li>Bereidingstijd: {{ recept.bereidingstijd }} min.</li>
+  <li>{{ recept.aantal_personen }} personen</li>
+  <li>{{ recept.doel.all|join:", " }}</li>
+  {% if recept.seizoen %}<li>Seizoen: {{ recept.seizoen }}</li>{% endif %}
+  {% if recept.vegetarisch %}<li>Vegatarisch</li>{% endif %}
+</ul>
+</div>
+
+<div style="clear: both;">
+<strong>Ingredienten</strong>
+<p>
+<ul>
+{% for hoeveelheid in hoeveelheden %}
+<li>
+{{ hoeveelheid.ingredient }}
+{{ hoeveelheid.hoeveelheid }}
+</li>
+{% endfor %}
+</ul>
+</p>
+</div>
+
+<div style="clear: both;">
+<strong>Bereiding</strong>
+<p>
+{{ recept.bereiding }}
+</p>
+</div>
+
+</div>
+
+{% endblock %}

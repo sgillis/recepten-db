@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Welcome {{ user }}!</h2>
+
+<div id="container">
+  {% for recept in recepten %}
+  {% if recept.photoAvailable %}
+  {% with recept.getAnyPhoto as foto %}
+  <a href="/recept/{{ recept.id }}" class="recepttitel">
+    <div class="recept">
+      <div><h2 class="recepttitel">{{ recept.naam }}</h2></div>
+      <div><img src="/media/{{ foto.image.name }}" width="280px" class="receptfoto" /></div>
+      <div>Door: <strong class="entry">{{ recept.user.username }}</strong></div>
+      <div>Bereidingstijd: <strong class="entry">{{ recept.bereidingstijd }} minuten</strong></div>
+      <!-- <div>Seizoen: <strong class="entry">{{ recept.seizoen }}</strong></div> -->
+      <div><strong class="entry">{{ recept.aantal_personen }} personen</strong></div>
+    </div>
+  </a>
+  {% endwith %}
+  {% else %}
+  <a href="/recept/{{ recept.id }}" class="recepttitel">
+    <div class="recept">
+      <h2 class="recepttitel">{{ recept.naam }}</h2>
+      <div>Door: <strong class="entry">{{ recept.user.username }}</strong></div>
+      <div>Bereidingstijd: <strong class="entry">{{ recept.bereidingstijd }} minuten</strong></div>
+      <!-- <div>Seizoen: <strong class="entry">{{ recept.seizoen }}</strong></div> -->
+      <div><strong class="entry">{{ recept.aantal_personen }} personen</strong></div>
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+
+<script>
+  $(function(){
+  var $container = $('#container');
+  
+  $container.imagesLoaded( function() {
+  $container.masonry({
+  itemSelector: '.recept'
+  });
+  });
+  });
+</script>
+
+
+{% endblock %}

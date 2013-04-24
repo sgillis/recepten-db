@@ -1,0 +1,196 @@
+* {
+  font-family: Helvetica, Arial, sans-serif;
+  color: #3f3e3d;
+}
+body {
+  background: #ffffff url(graphics/bg.png);
+  margin: 0;
+  padding: 0;
+}
+input {
+  width: 179px;
+  height: 38px;
+  border: 1px solid #d2d2d2;
+  padding: 0 10px;
+  outline: none;
+  font-size: 17px;
+}
+input:focus {
+  background: #FFFDF2;
+}
+input.error {
+  background: #efffd7;
+  color: #4c1717;
+  border: 1px solid #4c1717;
+}
+input[type="submit"] {
+  height: 36px;
+  width: auto;
+  border: 1px solid #7BC574;
+  border-radius: 2px;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 0 20px;
+  cursor: pointer;
+  background: #8cd585;
+  background: -moz-linear-gradient(top, #8cd585 0%, #82cd7a 23%, #55ad4c 86%, #4fa945 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #8cd585), color-stop(23%, #82cd7a), color-stop(86%, #55ad4c), color-stop(100%, #4fa945));
+  background: -webkit-linear-gradient(top, #8cd585 0%, #82cd7a 23%, #55ad4c 86%, #4fa945 100%);
+  background: -o-linear-gradient(top, #8cd585 0%, #82cd7a 23%, #55ad4c 86%, #4fa945 100%);
+  background: -ms-linear-gradient(top, #8cd585 0%, #82cd7a 23%, #55ad4c 86%, #4fa945 100%);
+  background: linear-gradient(to bottom, #8cd585 0%, #82cd7a 23%, #55ad4c 86%, #4fa945 100%);
+  filter: progid:dximagetransform.microsoft.gradient(startColorstr='@c1', endColorstr='@c4', GradientType=0);
+}
+a {
+  text-decoration: none;
+}
+a:hover {
+  color: #7BC574;
+}
+.wrapper {
+  width: 980px;
+  margin: auto;
+}
+header {
+  background: url(graphics/bg-header.png);
+  height: 85px;
+  width: 100%;
+}
+header div.wrapper {
+  padding: 11px 0;
+}
+header div.wrapper img {
+  position: relative;
+  top: 10px;
+  margin: 0 15px 0 0;
+}
+header div.wrapper span {
+  font-size: 18px;
+  margin: 0 3px 0 0;
+}
+header div.wrapper span.title {
+  font-size: 25px;
+  margin: 0 48px 0 0;
+}
+header div.wrapper form {
+  display: inline;
+}
+header div.wrapper form input {
+  margin: 0 0 0 14px;
+}
+header div.wrapper #btnLogOut {
+  float: right;
+  margin: 14px 0 0 0;
+}
+span.spacing {
+  padding-left: 5px;
+  margin-left: 25px;
+  height: 10px;
+  border-left: 1px solid #d2d2d2;
+}
+#content {
+  margin-bottom: 15px;
+  min-height: 560px;
+}
+#content div.wrapper {
+  margin: 38px auto;
+}
+#content div.wrapper img {
+  border-radius: 6px;
+  float: left;
+}
+#content div.wrapper div.panel {
+  border: 1px solid #d2d2d2;
+  background: white;
+  margin: 0;
+  margin-bottom: 29px;
+  border-radius: 6px;
+  font-size: 14px;
+  overflow: hidden;
+}
+#content div.wrapper div.panel.left {
+  width: 480px;
+  float: left;
+}
+#content div.wrapper div.panel.left div.fieldwrapper {
+  padding: 15px 15px;
+  border-bottom: 1px solid #d2d2d2;
+}
+#content div.wrapper div.panel.left div.fieldwrapper:last-child {
+  border: none;
+}
+#content div.wrapper div.panel.left div.fieldwrapper p {
+  padding: 0px 0;
+  margin: 0 0 0 0;
+}
+#content div.wrapper div.panel.right {
+  float: right;
+  width: 480px;
+}
+#content div.wrapper div.panel.right div.fieldwrapper {
+  padding: 15px 15px;
+  border-bottom: 1px solid #d2d2d2;
+}
+#content div.wrapper div.panel.right div.fieldwrapper:last-child {
+  border: none;
+}
+#content div.wrapper div.panel.right div.fieldwrapper p {
+  padding: 0px 0;
+  margin: 0 0 0 0;
+}
+#content div.wrapper div.panel img {
+  border-radius: 6px;
+  float: left;
+}
+#content div.wrapper div.panel * {
+  margin: 6px 0;
+}
+#content div.wrapper div.panel form {
+  padding: 0 23px;
+}
+#content div.wrapper div.panel h1 {
+  border-bottom: 1px solid #d2d2d2;
+  margin: 5px 0;
+  font-weight: normal;
+  font-size: 18px;
+  padding: 13px 23px;
+  height: 23px;
+}
+#content div.wrapper div.panel p {
+  padding: 0 24px;
+  margin: 18px 0;
+}
+#content div.wrapper div.recept {
+  border: 1px solid #d2d2d2;
+  background: white;
+  width: 300px;
+  margin: 10px;
+}
+.loginfield {
+  float: left;
+}
+.loginbtn {
+  float: left;
+}
+footer {
+  background: url(graphics/bg-footer.png);
+  height: 251px;
+  font-size: 14px;
+  clear: both;
+  vertical-align: baseline;
+}
+footer div.wrapper {
+  padding: 15px;
+}
+footer div.wrapper img {
+  float: right;
+  margin-right: 5px;
+}
+.errormessage {
+  padding: 10px;
+  margin: 20px, 0;
+  background: #ffefef;
+  color: #4c1717;
+  border: 1px solid #4c1717;
+}

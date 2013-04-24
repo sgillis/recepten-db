@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block login %}
+<form action="/loginview" method="post">{% csrf_token %}
+  {% for field in auth_form %}
+  {{ field }}
+  {% endfor %}
+  <input type="submit" id="btnLogin" value="Log in">
+</form>
+{% endblock %}
+
+{% block content %}
+{% if user_form.errormessages or auth_form.errormessages %}
+<div class="errormessage">
+{{ user_form.errormessages }}
+{{ auth_form.errormessages }}
+</div>
+{% endif %}
+
+<div class="panel left">
+  <h1>New to 'Recepten database'?</h1>
+  <p>
+    <form action="/signup/" method="POST">{% csrf_token %}
+      {% for field in user_form %}
+      <div>{{ field }}</div>
+      {% endfor %}
+      <input type="submit" value="Create account">
+    </form>
+  </p>
+</div>
+
+{% endblock %}
