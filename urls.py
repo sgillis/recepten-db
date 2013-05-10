@@ -15,6 +15,8 @@ urlpatterns = patterns('',
     url(r'^logoutview/$', 'rdb_app.views.logoutview', name='logoutview'),
     url(r'^toevoegen/$', 'rdb_app.views.toevoegen', name='toevoegen'),
     url(r'^recept/(?P<recept_id>\d+)/$', 'rdb_app.views.recept', name='recept'),
+    url(r'^ingredient/(?P<ingredient_id>\d+)/$', 'rdb_app.views.ingredient', name='ingredient'),
+    url(r'^ingredienten/$', 'rdb_app.views.ingredienten', name='ingredienten'),
 )
 
 if settings.DEBUG:

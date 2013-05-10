@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="panel left">
+<h1>{{ ingredient.naam }}</h1>
+
+{% if ingredient.seizoen %}
+<div>
+Seizoen: {{ ingredient.seizoen }}
+</div>
+{% endif %}
+
+</div>
+
+{% endblock %}

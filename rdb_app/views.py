@@ -97,3 +97,19 @@ def recept(request, recept_id):
   hoeveelheden = get_list_or_404(Hoeveelheid, recept=Recept.objects.get(pk=recept_id))
   context = {'recept': recept, 'hoeveelheden': hoeveelheden}
   return render_to_response('recept.html', context_instance=RequestContext(request, context))
+
+@login_required
+def ingredient(request, ingredient_id):
+  '''
+  View one ingredient
+  TODO add the list of recipes that include this ingredient
+  '''
+  ingredient = get_object_or_404(Ingredient, pk=ingredient_id)
+  context = {'ingredient': ingredient}
+  return render_to_response('ingredient.html', context_instance=RequestContext(request, context))
+
+@login_required
+def ingredienten(request):
+  ingredienten = Ingredient.objects.all()
+  context = {'ingredienten': ingredienten}
+  return render_to_response('ingredienten.html', context_instance=RequestContext(request, context))

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="panel left">
+<h1>Ingredienten</h1>
+{% for ingredient in ingredienten %}
+<div>
+<a href="/ingredient/{{ ingredient.id }}">{{ ingredient.naam }}</a>
+</div>
+{% endfor %}
+</div>
+
+{% endblock %}
