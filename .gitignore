@@ -1,6 +1,7 @@
 *.py[cod]
 database.db
 media/
+*.swp
 
 # C extensions
 *.so
