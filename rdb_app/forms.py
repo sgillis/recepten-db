@@ -34,7 +34,7 @@ class AuthenticateForm(AuthenticationForm):
 class ReceptForm(forms.Form):
   recept_naam = forms.CharField(widget=forms.widgets.TextInput(attrs={'placeholder': 'Naam'}))
   bereidingstijd = forms.IntegerField(widget=forms.widgets.TextInput(attrs={'placeholder': 'Bereidingstijd'}))
-  aantalpersonen = forms.IntegerField(widget=forms.widgets.TextInput(attrs={'placeholder': 'Aantal personen'}))
+  aantalpersonen = forms.IntegerField(widget=forms.widgets.TextInput(attrs={'placeholder': 'Aantal personen'}),label="Aantal personen")
   doel = forms.ModelChoiceField(queryset=Type.objects.all())
   seizoen = forms.ChoiceField(choices=SEIZOENEN, required=False)
   vegetarisch = forms.BooleanField(required=False)
