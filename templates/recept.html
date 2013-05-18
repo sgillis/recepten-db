@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<div class="panel left">
+<div class="panel">
 <h1>Recept {{ recept.naam }}</h1>
 
 {% for foto in recept.fotos.all %}
@@ -12,6 +12,7 @@
 {% endfor %}
 
 <div style="clear: both;">
+<strong>Informatie</strong>
 <ul>
   <li>Door: {{ recept.user.username }}</li>
   <li>Bereidingstijd: {{ recept.bereidingstijd }} min.</li>
@@ -22,24 +23,24 @@
 </ul>
 </div>
 
-<div style="clear: both;">
+<div>
 <strong>Ingredienten</strong>
 <p>
-<ul>
-{% for hoeveelheid in hoeveelheden %}
-<li>
-{{ hoeveelheid.ingredient }}
-{{ hoeveelheid.hoeveelheid }}
-</li>
-{% endfor %}
-</ul>
+	<ul>
+	{% for hoeveelheid in hoeveelheden %}
+		<li>
+		{{ hoeveelheid.ingredient }}
+		{{ hoeveelheid.hoeveelheid }}
+		</li>
+	{% endfor %}
+	</ul>
 </p>
 </div>
 
-<div style="clear: both;">
+<div>
 <strong>Bereiding</strong>
 <p>
-{{ recept.bereiding }}
+	{{ recept.bereiding }}
 </p>
 </div>
 
