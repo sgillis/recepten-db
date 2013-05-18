@@ -225,6 +225,37 @@ span.spacing {
 				border-bottom: 1px dotted @border-color;
 			}
 		}
+                
+                div.form {
+                        border: 1px solid @border-color;
+                        border-radius: 6px;
+                        background: white;
+                        width: 400px;
+                        margin: 3px;
+                        padding: 10px;
+                        float: left;
+                        
+                        h2 {
+                                font-size: 150%;
+                                font-weight: bold;
+                                color: @red;
+                                text-align: center;
+                                padding: 4px;
+                                border-bottom: 1px dashed @border-color;
+                        }
+                        
+                        div.fieldwrapper {
+                                border-bottom: 1px dotted @border-color;
+                                padding: 15px 15px;
+                                &:last-child {
+                                        border: none;
+                                }
+                        }        
+                        
+                        div.submitbutton{
+                                padding: 15px 15px;
+                        }
+                }
 	}
 }
 
