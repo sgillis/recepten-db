@@ -1,6 +1,6 @@
 @text-color: #3F3E3D;
 @border-color: #D2D2D2;
-@content-width: 800px;
+@content-width: 95%;
 @red: #CC2000;
 @green: #4FA945;
 
@@ -16,7 +16,7 @@
 }
 
 * {
-	font-family: Helvetica, Arial, sans-serif;
+	font-family: 'Merriweather Sans', sans-serif;
 	color: @text-color;
 }
 
@@ -119,6 +119,7 @@ span.spacing {
 		margin: 38px auto;
 		
 		img {
+			border: 1px solid @border-color;
 			border-radius: 6px;
 			float: left;
 		}
@@ -128,13 +129,11 @@ span.spacing {
 			background: white;
 			padding: 3px 3px 5px 12px;
 			border-radius: 6px;
-			font-size: 14px;
 			overflow: hidden;
-			width: @content-width;
 			
 			&.left {
-			width: @content-width - 500px;
-			float: left;
+				width: 50%;
+				float: left;
 			
 				div.fieldwrapper {
 					padding: 15px 15px;
@@ -153,7 +152,7 @@ span.spacing {
 
 			&.right {
 				float: right;
-				width: @content-width - 500px;
+				width: 50%;
 				
 				div.fieldwrapper {
 					padding: 15px 15px;
@@ -179,10 +178,11 @@ span.spacing {
 			}
 			
 			h1 {
-				border-bottom: 1px solid @border-color;
+				border-bottom: 1px dashed @border-color;
 				margin: 5px 0;
 				font-weight: normal;
 				font-size: 18px;
+				font-family: 'Merienda';
 				padding: 13px 23px;
 				height: 23px;
 			}
@@ -202,6 +202,7 @@ span.spacing {
 			padding: 10px;
 			
 			h2.recepttitel {
+				font-family: 'Merienda';
 				font-size: 150%;
 				font-weight: bold;
 				color: @red;
@@ -278,7 +279,6 @@ float: left;
 footer {
 	background: url(graphics/bg-footer.png);
 	height: 251px;
-	font-size: 14px;
 	clear: both;
 	vertical-align: baseline;
 	div.wrapper {
