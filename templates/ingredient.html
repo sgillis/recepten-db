@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="panel left">
-<h1>{{ ingredient.naam }}</h1>
+<h1>{{ ingredient.naam|capfirst }}</h1>
 
 {% if ingredient.seizoen %}
 <div>

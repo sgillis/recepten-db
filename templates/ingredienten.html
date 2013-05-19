@@ -6,7 +6,7 @@
 <h1>Ingredienten</h1>
 {% for ingredient in ingredienten %}
 <div>
-<a href="/ingredient/{{ ingredient.id }}">{{ ingredient.naam }}</a>
+<a href="/ingredient/{{ ingredient.id }}">{{ ingredient.naam|capfirst }}</a>
 </div>
 {% endfor %}
 </div>
