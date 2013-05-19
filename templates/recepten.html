@@ -15,11 +15,22 @@
       {% endwith %}
       {% endif %}
       
-      <div class="receptinfo">
-      	<p class="entry">Door: <strong>{{ recept.user.username }}</strong></p>
-      	<p class="entry">Bereidindstijd: <strong>{{ recept.bereidingstijd }} minuten</strong></p>
-      	<p class="entry">Personen: <strong>{{ recept.aantal_personen }} personen</strong></p>
-      </div>
+      <table class="receptinfo">
+      	<tr class="entry">
+      		<td class="icon"><img src="{{ STATIC_URL }}graphics/user.png" class="icon"></td>
+      		<td class="info">{{ recept.user.username }}</td>
+      	</tr>
+      	
+      	<tr class="entry">
+      		<td class="icon"><img src="{{ STATIC_URL }}graphics/alarm_clock.png" class="icon"></td>
+      		<td class="info">{{ recept.bereidingstijd }} minuten</td>
+      	</tr>
+      	
+      	<tr class="entry">
+      		<td class="icon"><img src="{{ STATIC_URL }}graphics/forkknife.png" class="icon"></td>
+      		<td class="info">{{ recept.aantal_personen }} personen</td>
+      	</tr>
+      </table>
     </div>
   </a>
   {% endfor %}
