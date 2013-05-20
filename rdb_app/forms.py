@@ -39,7 +39,7 @@ class ReceptForm(forms.Form):
   seizoen = forms.ChoiceField(choices=SEIZOENEN, required=False)
   vegetarisch = forms.BooleanField(required=False)
   fotos = forms.ImageField(required=False)
-  bereiding = forms.CharField(widget=forms.widgets.Textarea())
+  bereiding = forms.CharField(widget=forms.widgets.Textarea(attrs={'class':'ckeditor'}))
 
 class IngredientForm(forms.Form):
   ingredient_naam = forms.CharField(widget=forms.widgets.TextInput(attrs={'placeholder': 'Naam'}))

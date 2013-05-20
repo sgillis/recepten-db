@@ -2,6 +2,8 @@
 database.db
 media/
 *.swp
+*~
+.DS_Store
 
 # C extensions
 *.so
