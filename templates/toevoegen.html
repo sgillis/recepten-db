@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="form">
-<h2>Recept toevoegen</h2>
+<div class="panel left">
+<h1>Recept toevoegen</h1>
 <form enctype="multipart/form-data" method="POST">{% csrf_token %}
   {% for field in recept_form %}
     <div class="fieldwrapper">
