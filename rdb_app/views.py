@@ -5,19 +5,21 @@ from django.forms.formsets import formset_factory
 from django.template.context import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404, get_list_or_404
 
-from rdb_app.forms import UserCreateForm, AuthenticateForm, ReceptForm, IngredientForm, HoeveelheidForm
+from rdb_app.forms import UserCreateForm, AuthenticateForm, ReceptForm, IngredientForm, HoeveelheidForm, SearchForm
 from rdb_app.models import Recept, Ingredient, Hoeveelheid, Foto
 
-def home(request, auth_form=None, user_form=None):
+def home(request, auth_form=None, user_form=None, search_form=None):
   """
   Homepage
   """
   # Check if logged in
   if request.user.is_authenticated():
     user = request.user
+    search_form = search_form or SearchForm()
     return render(request,"recepten.html",
                   {'recepten': Recept.objects.all(),
-                   'user': user} )
+                   'user': user,
+                   'search_form': search_form, } )
   # If not logged in
   else:
     auth_form = auth_form or AuthenticateForm()

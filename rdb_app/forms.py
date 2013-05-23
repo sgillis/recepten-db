@@ -2,6 +2,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
 from django.utils.html import strip_tags
+from chosen import forms as chosenforms
 
 from rdb_app.models import Recept, Ingredient, SEIZOENEN, Hoeveelheid, Type
 
@@ -49,3 +50,9 @@ class HoeveelheidForm(forms.Form):
   #ingredient = forms.ChoiceField(choices=[(ingredient.id, ingredient.naam) for ingredient in Ingredient.objects.all()]) 
   ingredient = forms.ModelChoiceField(queryset=Ingredient.objects.all()) 
   hoeveelheid = forms.CharField(widget=forms.widgets.TextInput(attrs={'placeholder': 'Hoeveelheid'}))
+
+class SearchForm(forms.Form):
+  ingredienten = chosenforms.ChosenModelMultipleChoiceField(queryset=Ingredient.objects.all())
+  def __init__(self, *args, **kwargs):
+    super(SearchForm, self).__init__(*args, **kwargs)
+    self.fields['ingredienten'].widget.attrs = {'style': 'width:350px;', 'class': 'chzn-select', 'data-placeholder': 'Selecteer ingredienten...'}

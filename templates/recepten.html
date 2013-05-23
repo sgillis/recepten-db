@@ -2,15 +2,13 @@
 
 {% block content %}
 <h2>Welcome {{ user|capfirst }}!</h2>
-
-<select data-placeholder="Kies ..." class="chzn-select" multiple style="width:350px;" tabindex="4">
-	<option value=""></option>
-	<option value="Kaas">Kaas</option>
-	<option value="Hesp">Hesp</option>
-	<option value="Ananas">Ananas</option>
-</select>
-
-
+<div>
+  <form enctype="multipart/form-data" method="POST">{% csrf_token %}
+  {% for field in search_form %}
+    {{ field }}
+  {% endfor %}
+  </form>
+</div>
 <div id="container">
   {% for recept in recepten %}
   <a href="/recept/{{ recept.id }}" class="recepttitel">
@@ -59,6 +57,8 @@ $(function(){
 <!-- CHOSEN -->
 <script src="{{ STATIC_URL }}chosen.jquery.js" type="text/javascript"></script>
 <script type="text/javascript"> 
-	$('.chzn-select').chosen();
+        $(document).ready(function(){
+                $('.chzn-select').chosen();
+        });
 </script>
 {% endblock %}
