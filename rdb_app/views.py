@@ -72,7 +72,7 @@ def toevoegen(request):
     else:
       if ingredient_form.is_valid():
         data = ingredient_form.cleaned_data
-        Ingredient.objects.create(naam=data['ingredient_naam'], seizoen=data['ingredient_seizoen'])
+        Ingredient.objects.create(naam=data['ingredient_naam'].lower(), seizoen=data['ingredient_seizoen'])
         ingredient_form = IngredientForm()
       if recept_form.is_valid():
         if hoeveelheid_formset.is_valid():
