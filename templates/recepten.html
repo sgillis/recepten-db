@@ -34,7 +34,7 @@
       	
       	<tr class="entry">
       		<td class="icon"><img src="{{ STATIC_URL }}graphics/forkknife.png" class="icon"></td>
-      		<td class="info">{{ recept.aantal_personen }} personen</td>
+      		<td class="info">{{ recept.aantal_personen }} perso{{ recept.aantal_personen|pluralize:"on,nen" }}</td>
       	</tr>
       </table>
     </div>
