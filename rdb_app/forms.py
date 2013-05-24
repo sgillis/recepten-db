@@ -44,10 +44,12 @@ class ReceptForm(forms.Form):
 
 class IngredientForm(forms.Form):
   ingredient_naam = forms.CharField(widget=forms.widgets.TextInput(attrs={'placeholder': 'Naam'}))
-  ingredient_seizoen = forms.ChoiceField(choices=SEIZOENEN, required=False)
+  ingredient_seizoen = chosenforms.ChosenChoiceField(choices=SEIZOENEN, required=False, overlay="Kies een seizoen (optioneel)...")
+  def __init__(self, *args, **kwargs):
+    super(IngredientForm, self).__init__(*args, **kwargs)
+    self.fields['ingredient_seizoen'].widget.attrs.update({'style': 'width:350px;',})
 
 class HoeveelheidForm(forms.Form):
-  #ingredient = forms.ChoiceField(choices=[(ingredient.id, ingredient.naam) for ingredient in Ingredient.objects.all()]) 
   ingredient = forms.ModelChoiceField(queryset=Ingredient.objects.all()) 
   hoeveelheid = forms.CharField(widget=forms.widgets.TextInput(attrs={'placeholder': 'Hoeveelheid'}))
 

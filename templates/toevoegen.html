@@ -37,15 +37,20 @@
   {% for field in ingredient_form %}
     <div class="fieldwrapper">
     {{ field.label }}
-    <p>
-    {{ field }}
-    </p>
+    <p>{{ field }}</p>
     </div>
   {% endfor %}
   {{ hoeveelheid_formset.management_form }}
   <input type="submit" value="Toevoegen" style="float: right">
 </form>
-
 </div>
+
+<!-- CHOSEN -->
+<script src="{{ STATIC_URL }}chosen.jquery.js" type="text/javascript"></script>
+<script type="text/javascript"> 
+        $(document).ready(function(){
+                $('.chzn-select').chosen();
+        });
+</script>
 
 {% endblock %}
