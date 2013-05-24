@@ -57,6 +57,7 @@ def logoutview(request):
   logout(request)
   return redirect('/')
 
+'''
 @login_required
 def toevoegen(request):
   HoeveelheidFormSet = formset_factory(HoeveelheidForm)
@@ -79,7 +80,6 @@ def toevoegen(request):
           Ingredient.objects.create(naam=ingredient_naam, seizoen=ingredient_seizoen)
         ingredient_form = IngredientForm()
       if recept_form.is_valid():
-        print ' --- hoeveelheid_formset valid? ', hoeveelheid_formset.is_valid()
         if hoeveelheid_formset.is_valid():
           data = recept_form.cleaned_data
           hoeveelheid_data = hoeveelheid_formset.cleaned_data
@@ -100,6 +100,79 @@ def toevoegen(request):
     recept_form = ReceptForm()
     ingredient_form = IngredientForm()
   return render(request, "toevoegen.html", { 'recept_form': recept_form, 'ingredient_form': ingredient_form, 'hoeveelheid_formset': hoeveelheid_formset, 'user': request.user }, context_instance=RequestContext(request))
+'''
+
+@login_required
+def toevoegen(request, recept_form=None, ingredient_form=None, hoeveelheid_formset=None):
+  '''
+  Generates the page and forms used to submit a recipe
+  '''
+  recept_form = recept_form or ReceptForm()
+  ingredient_form = ingredient_form or IngredientForm()
+  HoeveelheidFormset = formset_factory(HoeveelheidForm)
+  hoeveelheid_formset = hoeveelheid_formset or HoeveelheidFormset()
+  context = { 'recept_form': recept_form,
+              'ingredient_form': ingredient_form,
+              'hoeveelheid_formset': hoeveelheid_formset,
+              'user': request.user, }
+  return render(request, 'toevoegen.html', context)
+
+@login_required
+def ingredient_toevoegen(request):
+  '''
+  Submit a new ingredient
+  '''
+  if request.method=="POST" and 'ingredient_toevoegen' in request.POST:
+    print ' --- POST: ', request.POST 
+    ingredient_form = IngredientForm(request.POST)
+    if ingredient_form.is_valid():
+      data = ingredient_form.cleaned_data
+      ingredient_naam = data['ingredient_naam'].lower()
+      ingredient_seizoen = data['ingredient_seizoen']
+      # Check if the ingredient is already in the database
+      if Ingredient.objects.filter(naam=ingredient_naam).count()==0:
+        Ingredient.objects.create(naam=ingredient_naam, seizoen=ingredient_seizoen)
+  return toevoegen(request)
+
+@login_required
+def submit_recipe(request):
+  '''
+  Handle a submitted recipe form
+  '''
+  HoeveelheidFormset = formset_factory(HoeveelheidForm)
+  if request.method=='POST' and 'submit_recipe' in request.POST:
+    recept_form = ReceptForm(request.POST, request.FILES)
+    hoeveelheid_formset = HoeveelheidFormset(request.POST)
+    # Check if the forms are valid, and add the recipe. Redirect to home page
+    # afterwards
+    if recept_form.is_valid():
+      if hoeveelheid_formset.is_valid():
+        data = recept_form.cleaned_data
+        hoeveelheid_data = hoeveelheid_formset.cleaned_data
+        recept = Recept.objects.create(naam=data['recept_naam'],
+                                       user=request.user,
+                                       bereidingstijd=data['bereidingstijd'],
+                                       aantal_personen=data['aantalpersonen'],
+                                       bereiding=data['bereiding'],
+                                       seizoen=data['seizoen'],
+                                       vegetarisch=data['vegetarisch'])
+        if 'fotos' in request.FILES.keys():
+          foto = Foto.objects.create(image=request.FILES['fotos'], naam=data['recept_naam'])
+          recept.fotos.add(foto)
+        if 'doel' in request.POST:
+          recept.doel.add(request.POST['doel'])
+        for h_data in hoeveelheid_data:
+          try:
+            h = Hoeveelheid.objects.create(hoeveelheid=h_data['hoeveelheid'],
+                                           recept=recept,
+                                           ingredient=h_data['ingredient'])
+          except:
+            continue
+        return redirect('/')
+  else:
+    recept_form = ReceptForm()
+    hoeveelheid_formset = HoeveelheidFormset()
+  return toevoegen(request, recept_form=recept_form, hoeveelheid_formset=hoeveelheid_formset)
 
 @login_required
 def recept(request, recept_id):
