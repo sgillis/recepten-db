@@ -50,8 +50,11 @@ class IngredientForm(forms.Form):
     self.fields['ingredient_seizoen'].widget.attrs.update({'style': 'width:350px;',})
 
 class HoeveelheidForm(forms.Form):
-  ingredient = forms.ModelChoiceField(queryset=Ingredient.objects.all()) 
+  ingredient = chosenforms.ChosenModelChoiceField(overlay="Ingredient...",queryset=Ingredient.objects.order_by('naam'), empty_label='')
   hoeveelheid = forms.CharField(widget=forms.widgets.TextInput(attrs={'placeholder': 'Hoeveelheid'}))
+  def __init__(self, *args, **kwargs):
+    super(HoeveelheidForm, self).__init__(*args, **kwargs)
+    self.fields['ingredient'].widget.attrs.update({'class': 'chzn-select-removable'})
 
 class SearchForm(forms.Form):
   ingredienten = chosenforms.ChosenModelMultipleChoiceField(overlay="Selecteer ingredienten...",queryset=Ingredient.objects.order_by('naam'))

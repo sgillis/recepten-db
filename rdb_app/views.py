@@ -79,6 +79,7 @@ def toevoegen(request):
           Ingredient.objects.create(naam=ingredient_naam, seizoen=ingredient_seizoen)
         ingredient_form = IngredientForm()
       if recept_form.is_valid():
+        print ' --- hoeveelheid_formset valid? ', hoeveelheid_formset.is_valid()
         if hoeveelheid_formset.is_valid():
           data = recept_form.cleaned_data
           hoeveelheid_data = hoeveelheid_formset.cleaned_data
@@ -89,7 +90,10 @@ def toevoegen(request):
           if 'doel' in request.POST:
             recept.doel.add(request.POST['doel'])
           for h_data in hoeveelheid_data:
-            h = Hoeveelheid.objects.create(hoeveelheid=h_data['hoeveelheid'],recept=recept,ingredient=h_data['ingredient'])
+            try:
+              h = Hoeveelheid.objects.create(hoeveelheid=h_data['hoeveelheid'],recept=recept,ingredient=h_data['ingredient'])
+            except:
+              continue
           return redirect('/')
   else:
     hoeveelheid_formset = HoeveelheidFormSet()

@@ -16,9 +16,11 @@
     {% if field.label == "Recept naam" %}
       <div class="fieldwrapper">
       {% for form in hoeveelheid_formset %}
-        {% for field in form %}
-        <p>{{ field }}</p>
-        {% endfor %}
+        <p>
+          {% for field in form %}
+            {{ field }}
+          {% endfor %}
+        </p>
       {% endfor %}
       <input type="submit" name="add" value="Add">
       </div>
@@ -50,6 +52,7 @@
 <script type="text/javascript"> 
         $(document).ready(function(){
                 $('.chzn-select').chosen();
+                $('.chzn-select-removable').chosen({allow_single_deselect: true});
         });
 </script>
 
