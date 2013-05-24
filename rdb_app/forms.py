@@ -36,11 +36,15 @@ class ReceptForm(forms.Form):
   recept_naam = forms.CharField(widget=forms.widgets.TextInput(attrs={'placeholder': 'Naam'}))
   bereidingstijd = forms.IntegerField(widget=forms.widgets.TextInput(attrs={'placeholder': 'Bereidingstijd'}))
   aantalpersonen = forms.IntegerField(widget=forms.widgets.TextInput(attrs={'placeholder': 'Aantal personen'}),label="Aantal personen")
-  doel = forms.ModelChoiceField(queryset=Type.objects.all())
-  seizoen = forms.ChoiceField(choices=SEIZOENEN, required=False)
+  doel = chosenforms.ChosenModelChoiceField(overlay="Type gerecht...",queryset=Type.objects.order_by('doel'), empty_label='')
+  seizoen = chosenforms.ChosenChoiceField(overlay="Kies een seizoen (optioneel)...",choices=SEIZOENEN, required=False)
   vegetarisch = forms.BooleanField(required=False)
   fotos = forms.ImageField(required=False)
   bereiding = forms.CharField(widget=forms.widgets.Textarea(attrs={'class':'ckeditor'}))
+  def __init__(self, *args, **kwargs):
+    super(ReceptForm, self).__init__(*args,**kwargs)
+    self.fields['doel'].widget.attrs.update({'label':'Type gerecht','style':'width:350px;'})
+    self.fields['seizoen'].widget.attrs.update({'style':'width:350px;'})
 
 class IngredientForm(forms.Form):
   ingredient_naam = forms.CharField(widget=forms.widgets.TextInput(attrs={'placeholder': 'Naam'}))
