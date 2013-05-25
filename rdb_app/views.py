@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.forms.formsets import formset_factory
 from django.template.context import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404, get_list_or_404
+from django.http import HttpResponseRedirect, HttpResponseServerError
 
 from rdb_app.forms import UserCreateForm, AuthenticateForm, ReceptForm, IngredientForm, HoeveelheidForm, SearchForm
 from rdb_app.models import Recept, Ingredient, Hoeveelheid, Foto
@@ -121,10 +122,14 @@ def toevoegen(request, recept_form=None, ingredient_form=None, hoeveelheid_forms
 def ingredient_toevoegen(request):
   '''
   Submit a new ingredient
+  Should be called by AJAX
   '''
-  if request.method=="POST" and 'ingredient_toevoegen' in request.POST:
+  if request.method=="POST":
     print ' --- POST: ', request.POST 
-    ingredient_form = IngredientForm(request.POST)
+    try:
+      ingredient_form = IngredientForm(request.POST)
+    except:
+      return HttpResponseServerError('Error')
     if ingredient_form.is_valid():
       data = ingredient_form.cleaned_data
       ingredient_naam = data['ingredient_naam'].lower()
@@ -132,7 +137,7 @@ def ingredient_toevoegen(request):
       # Check if the ingredient is already in the database
       if Ingredient.objects.filter(naam=ingredient_naam).count()==0:
         Ingredient.objects.create(naam=ingredient_naam, seizoen=ingredient_seizoen)
-  return toevoegen(request)
+  return HttpResponseRedirect(u'/toevoegen/')
 
 @login_required
 def submit_recipe(request):

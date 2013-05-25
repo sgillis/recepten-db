@@ -36,7 +36,6 @@ function addForm(btn, prefix){
 };
 
 function removeForm(button, prefix){
-  console.log('test');
   $(button).parents('.dynamic-form').remove();
   var forms = $('.dynamic-form');
   $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
@@ -48,14 +47,65 @@ function removeForm(button, prefix){
   return false
 };
 
+function getCookie(name){
+  var cookieValue = null;
+  if (document.cookie && document.cookie != ''){
+    var cookies = document.cookie.split(';');
+    for (var i=0; i<cookies.length; i++){
+      var cookie = jQuery.trim(cookies[i]);
+      if (cookie.substring(0, name.length + 1) == (name + '=')){
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+var csrftoken = getCookie('csrftoken');
+
+function csrfSafeMethod(method){
+  return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+
+$.ajaxSetup({
+  crossDomain: false,
+  beforeSend: function(xhr, settings){
+    if (!csrfSafeMethod(settings.type)){
+      xhr.setRequestHeader("X-CSRFToken", csrftoken);
+    }
+  }
+});
+
+var ingredient_submitted = function(result, status){
+  // TODO: This function should be completed.
+  console.log(result);
+  if (status=="success"){
+    console.log("success");
+  } else {
+    console.log("failed");
+  }
+}
+
+var ingredient_toevoegen = function(){
+  var ingredient_naam = $("form input[name='ingredient_naam']").val()
+  if (ingredient_naam!=""){
+    var data = { ingredient_naam: ingredient_naam };
+    var args = { type:"POST", url:"/ingredient_toevoegen/", data:data, complete:ingredient_submitted };
+    $.ajax(args);
+  } else {
+    // TODO: Show help message!
+  }
+  return false;
+};
+
 $(function(){
   $('.add-row').click(function() {
     addForm(this, 'form');
   });
   $('.remove-row').click(function() {
-    console.log('test');
     removeForm(this, 'form');
   });
+  $('#ingredient_toevoegen').click(ingredient_toevoegen);
 });
 </script>
 {% endblock %}
@@ -106,7 +156,7 @@ $(function(){
     <p>{{ field }}</p>
     </div>
   {% endfor %}
-  <input type="submit" name="ingredient_toevoegen" value="Toevoegen" style="float: right">
+  <a href="javascript:void(0)" id="ingredient_toevoegen" style="float: right">Ingredient toevoegen</a>
 </form>
 </div>
 
