@@ -4,7 +4,9 @@ from django.contrib.auth.decorators import login_required
 from django.forms.formsets import formset_factory
 from django.template.context import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404, get_list_or_404
-from django.http import HttpResponseRedirect, HttpResponseServerError
+from django.http import HttpResponseRedirect, HttpResponseServerError, HttpResponse
+from django.core.serializers import serialize
+from django.utils import simplejson as json
 
 from rdb_app.forms import UserCreateForm, AuthenticateForm, ReceptForm, IngredientForm, HoeveelheidForm, SearchForm
 from rdb_app.models import Recept, Ingredient, Hoeveelheid, Foto
@@ -58,62 +60,15 @@ def logoutview(request):
   logout(request)
   return redirect('/')
 
-'''
 @login_required
-def toevoegen(request):
-  HoeveelheidFormSet = formset_factory(HoeveelheidForm)
-  if request.method == "POST":
-    recept_form = ReceptForm(request.POST, request.FILES)
-    ingredient_form = IngredientForm(request.POST)
-    hoeveelheid_formset = HoeveelheidFormSet(request.POST)
-    if 'add' in request.POST:
-      # Need to add an hoeveelheid form in the hoeveelheid_formset
-      cp = request.POST.copy()
-      cp['form-TOTAL_FORMS'] = int(cp['form-TOTAL_FORMS']) + 1
-      hoeveelheid_formset = HoeveelheidFormSet(cp)
-    else:
-      if ingredient_form.is_valid():
-        data = ingredient_form.cleaned_data
-        ingredient_naam = data['ingredient_naam'].lower()
-        ingredient_seizoen = data['ingredient_seizoen']
-        # Check if the ingredient is already in the database
-        if Ingredient.objects.filter(naam=ingredient_naam).count()==0:
-          Ingredient.objects.create(naam=ingredient_naam, seizoen=ingredient_seizoen)
-        ingredient_form = IngredientForm()
-      if recept_form.is_valid():
-        if hoeveelheid_formset.is_valid():
-          data = recept_form.cleaned_data
-          hoeveelheid_data = hoeveelheid_formset.cleaned_data
-          recept = Recept.objects.create(naam=data['recept_naam'],user=request.user,bereidingstijd=data['bereidingstijd'],aantal_personen=data['aantalpersonen'],bereiding=data['bereiding'],seizoen=data['seizoen'], vegetarisch=data['vegetarisch'])
-          if 'fotos' in request.FILES.keys():
-            foto = Foto.objects.create(image=request.FILES['fotos'], naam=data['recept_naam'])
-            recept.fotos.add(foto)
-          if 'doel' in request.POST:
-            recept.doel.add(request.POST['doel'])
-          for h_data in hoeveelheid_data:
-            try:
-              h = Hoeveelheid.objects.create(hoeveelheid=h_data['hoeveelheid'],recept=recept,ingredient=h_data['ingredient'])
-            except:
-              continue
-          return redirect('/')
-  else:
-    hoeveelheid_formset = HoeveelheidFormSet()
-    recept_form = ReceptForm()
-    ingredient_form = IngredientForm()
-  return render(request, "toevoegen.html", { 'recept_form': recept_form, 'ingredient_form': ingredient_form, 'hoeveelheid_formset': hoeveelheid_formset, 'user': request.user }, context_instance=RequestContext(request))
-'''
-
-@login_required
-def toevoegen(request, recept_form=None, ingredient_form=None, hoeveelheid_formset=None):
+def toevoegen(request, recept_form=None, hoeveelheid_formset=None):
   '''
   Generates the page and forms used to submit a recipe
   '''
   recept_form = recept_form or ReceptForm()
-  ingredient_form = ingredient_form or IngredientForm()
   HoeveelheidFormset = formset_factory(HoeveelheidForm)
   hoeveelheid_formset = hoeveelheid_formset or HoeveelheidFormset()
   context = { 'recept_form': recept_form,
-              'ingredient_form': ingredient_form,
               'hoeveelheid_formset': hoeveelheid_formset,
               'user': request.user, }
   return render(request, 'toevoegen.html', context)
@@ -125,11 +80,10 @@ def ingredient_toevoegen(request):
   Should be called by AJAX
   '''
   if request.method=="POST":
-    print ' --- POST: ', request.POST 
     try:
       ingredient_form = IngredientForm(request.POST)
     except:
-      return HttpResponseServerError('Error')
+      return HttpResponseServerError('Error in ingredient_toevoegen.')
     if ingredient_form.is_valid():
       data = ingredient_form.cleaned_data
       ingredient_naam = data['ingredient_naam'].lower()
@@ -137,7 +91,7 @@ def ingredient_toevoegen(request):
       # Check if the ingredient is already in the database
       if Ingredient.objects.filter(naam=ingredient_naam).count()==0:
         Ingredient.objects.create(naam=ingredient_naam, seizoen=ingredient_seizoen)
-  return HttpResponseRedirect(u'/toevoegen/')
+  return HttpResponse(serialize('json', (Ingredient.objects.latest('id'),)), mimetype="application/json")
 
 @login_required
 def submit_recipe(request):
@@ -174,6 +128,9 @@ def submit_recipe(request):
           except:
             continue
         return redirect('/')
+      else:
+        # TODO: Return some useful error message.
+        pass
   else:
     recept_form = ReceptForm()
     hoeveelheid_formset = HoeveelheidFormset()

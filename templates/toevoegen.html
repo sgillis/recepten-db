@@ -27,7 +27,7 @@ function addForm(btn, prefix){
   $(row).find('div.chzn-container').remove();
   $(row).find('select').show();
   $(row).find('select').removeClass('chzn-done');
-  $(row).find('select').chosen({allow_single_deselect: true});
+  $(row).find('select').chosen({allow_single_deselect: true, no_results_text: "<a href='javascript:void(0)' id='no_results_text'>Voeg ingredient toe: </a><script type='text/javascript'>$('#no_results_text').click(ingredient_toevoegen);<\/script>"});
   // Update the total number of forms
   $('#id_' + prefix + '-TOTAL_FORMS').val(formCount + 1);
   // Make the remove row button visible and active
@@ -77,35 +77,43 @@ $.ajaxSetup({
 });
 
 var ingredient_submitted = function(result, status){
-  // TODO: This function should be completed.
-  console.log(result);
   if (status=="success"){
-    console.log("success");
+    // Parse the json returned by Django
+    ingredient = $.parseJSON(result.responseText)[0];
+    // Add the new ingredient to all select fields in the dynamic forms
+    var pk = ingredient.pk;
+    var ingredient_naam = ingredient.fields.naam;
+    $('.dynamic-form').each( function(){ $(this).find('select').append('<option value="'+pk+'">'+ingredient_naam+'</option>') } );
+    // Inform chosen that the list was updated
+    $('.chzn-select-hoeveelheid').trigger('liszt:updated');
+    // Set the current chosen value to the new ingredient
+    $('.chzn-with-drop').parent().find('select').val(pk).trigger("liszt:updated");
+    // Close the drop down
+    $('.chzn-with-drop').removeClass('chzn-with-drop');
   } else {
+    // TODO: Do something if failed
     console.log("failed");
   }
 }
 
+// This function is called from the 'no_results_text' of 'chosen-select-hoeveelheid' class
 var ingredient_toevoegen = function(){
-  var ingredient_naam = $("form input[name='ingredient_naam']").val()
+  var ingredient_naam = $(this).parent().find('span').text();
   if (ingredient_naam!=""){
     var data = { ingredient_naam: ingredient_naam };
     var args = { type:"POST", url:"/ingredient_toevoegen/", data:data, complete:ingredient_submitted };
     $.ajax(args);
-  } else {
-    // TODO: Show help message!
   }
   return false;
 };
 
-$(function(){
+$(document).ready(function(){
   $('.add-row').click(function() {
     addForm(this, 'form');
   });
   $('.remove-row').click(function() {
     removeForm(this, 'form');
   });
-  $('#ingredient_toevoegen').click(ingredient_toevoegen);
 });
 </script>
 {% endblock %}
@@ -147,25 +155,13 @@ $(function(){
 </form>
 </div>
 
-<div class="panel right">
-<h1>Ingredient toevoegen</h1>
-<form method="POST" action='/ingredient_toevoegen/'>{% csrf_token %}
-  {% for field in ingredient_form %}
-    <div class="fieldwrapper">
-    {{ field.label }}
-    <p>{{ field }}</p>
-    </div>
-  {% endfor %}
-  <a href="javascript:void(0)" id="ingredient_toevoegen" style="float: right">Ingredient toevoegen</a>
-</form>
-</div>
-
 <!-- CHOSEN -->
 <script src="{{ STATIC_URL }}chosen.jquery.js" type="text/javascript"></script>
 <script type="text/javascript"> 
         $(document).ready(function(){
                 $('.chzn-select').chosen();
                 $('.chzn-select-removable').chosen({allow_single_deselect: true});
+                $('.chzn-select-hoeveelheid').chosen({allow_single_deselect: true, no_results_text: "<a href='javascript:void(0)' id='no_results_text'>Voeg ingredient toe: </a><script type='text/javascript'>$('#no_results_text').click(ingredient_toevoegen);<\/script>"});
         });
 </script>
 

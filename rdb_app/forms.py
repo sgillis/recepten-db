@@ -58,7 +58,7 @@ class HoeveelheidForm(forms.Form):
   hoeveelheid = forms.CharField(widget=forms.widgets.TextInput(attrs={'placeholder': 'Hoeveelheid'}))
   def __init__(self, *args, **kwargs):
     super(HoeveelheidForm, self).__init__(*args, **kwargs)
-    self.fields['ingredient'].widget.attrs.update({'class': 'chzn-select-removable'})
+    self.fields['ingredient'].widget.attrs.update({'class': 'chzn-select-hoeveelheid'})
 
 class SearchForm(forms.Form):
   ingredienten = chosenforms.ChosenModelMultipleChoiceField(overlay="Selecteer ingredienten...",queryset=Ingredient.objects.order_by('naam'))
