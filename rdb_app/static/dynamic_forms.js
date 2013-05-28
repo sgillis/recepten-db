@@ -23,7 +23,7 @@ function addForm(btn, prefix){
   $(row).find('div.chzn-container').remove();
   $(row).find('select').show();
   $(row).find('select').removeClass('chzn-done');
-  $(row).find('select').chosen({allow_single_deselect: true, no_results_text: "<a href='javascript:void(0)' id='no_results_text'>Voeg ingredient toe: </a><script type='text/javascript'>$('#no_results_text').click(dynamic_forms.ingredient_toevoegen);<\/script>"});
+  $(row).find('select').chosen({allow_single_deselect: true, no_results_text: "<a href='javascript:void(0)' id='no_results_text'>Voeg ingredient toe: </a><script type='text/javascript'>$('#no_results_text').click(ingredient_toevoegen);<\/script>"});
   // Update the total number of forms
   $('#id_' + prefix + '-TOTAL_FORMS').val(formCount + 1);
   // Make the remove row button visible and active
