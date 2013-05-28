@@ -8,7 +8,7 @@ from django.http import HttpResponseRedirect, HttpResponseServerError, HttpRespo
 from django.core.serializers import serialize
 from django.utils import simplejson as json
 
-from rdb_app.forms import UserCreateForm, AuthenticateForm, ReceptForm, IngredientForm, HoeveelheidForm, SearchForm, TypeForm
+from rdb_app.forms import UserCreateForm, AuthenticateForm, ReceptForm, IngredientForm, HoeveelheidForm, SearchForm, TypeForm, ImageForm
 from rdb_app.models import Recept, Ingredient, Hoeveelheid, Foto, Type
 
 def home(request, auth_form=None, user_form=None, search_form=None):
@@ -61,15 +61,18 @@ def logoutview(request):
   return redirect('/')
 
 @login_required
-def toevoegen(request, recept_form=None, hoeveelheid_formset=None):
+def toevoegen(request, recept_form=None, hoeveelheid_formset=None, image_formset=None):
   '''
   Generates the page and forms used to submit a recipe
   '''
   recept_form = recept_form or ReceptForm()
   HoeveelheidFormset = formset_factory(HoeveelheidForm)
   hoeveelheid_formset = hoeveelheid_formset or HoeveelheidFormset()
+  ImageFormset = formset_factory(ImageForm)
+  image_formset = image_formset or ImageFormset(prefix="image_form")
   context = { 'recept_form': recept_form,
               'hoeveelheid_formset': hoeveelheid_formset,
+              'image_formset': image_formset,
               'user': request.user, }
   return render(request, 'toevoegen.html', context)
 
@@ -116,9 +119,11 @@ def submit_recipe(request):
   Handle a submitted recipe form
   '''
   HoeveelheidFormset = formset_factory(HoeveelheidForm)
+  ImageFormset = formset_factory(ImageForm)
   if request.method=='POST' and 'submit_recipe' in request.POST:
     recept_form = ReceptForm(request.POST, request.FILES)
     hoeveelheid_formset = HoeveelheidFormset(request.POST)
+    image_formset = ImageFormset(request.POST, request.FILES, prefix="image_form")
     # Check if the forms are valid, and add the recipe. Redirect to home page
     # afterwards
     if recept_form.is_valid():
@@ -132,9 +137,10 @@ def submit_recipe(request):
                                        bereiding=data['bereiding'],
                                        seizoen=data['seizoen'],
                                        vegetarisch=data['vegetarisch'])
-        if 'fotos' in request.FILES.keys():
-          foto = Foto.objects.create(image=request.FILES['fotos'], naam=data['recept_naam'])
-          recept.fotos.add(foto)
+        if image_formset.is_valid():
+          for (i, f) in enumerate(request.FILES.keys()):
+            foto = Foto.objects.create(image=request.FILES[f], naam=data['recept_naam']+'image_' + str(i))
+            recept.fotos.add(foto)
         if 'doel' in request.POST:
           recept.doel.add(request.POST['doel'])
         for h_data in hoeveelheid_data:
@@ -151,7 +157,8 @@ def submit_recipe(request):
   else:
     recept_form = ReceptForm()
     hoeveelheid_formset = HoeveelheidFormset()
-  return toevoegen(request, recept_form=recept_form, hoeveelheid_formset=hoeveelheid_formset)
+    image_formset = ImageFormset(prefix="image_form")
+  return toevoegen(request, recept_form=recept_form, hoeveelheid_formset=hoeveelheid_formset, image_formset=image_formset)
 
 @login_required
 def recept(request, recept_id):

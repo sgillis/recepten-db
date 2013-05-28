@@ -39,7 +39,6 @@ class ReceptForm(forms.Form):
   doel = chosenforms.ChosenModelChoiceField(overlay="Type gerecht...",queryset=Type.objects.order_by('doel'), empty_label='')
   seizoen = chosenforms.ChosenChoiceField(overlay="Kies een seizoen (optioneel)...",choices=SEIZOENEN, required=False)
   vegetarisch = forms.BooleanField(required=False)
-  fotos = forms.ImageField(required=False)
   bereiding = forms.CharField(widget=forms.widgets.Textarea(attrs={'class':'ckeditor'}))
   def __init__(self, *args, **kwargs):
     super(ReceptForm, self).__init__(*args,**kwargs)
@@ -62,6 +61,9 @@ class HoeveelheidForm(forms.Form):
 
 class TypeForm(forms.Form):
   type_naam = forms.CharField()
+
+class ImageForm(forms.Form):
+  foto = forms.ImageField(required=False)
 
 class SearchForm(forms.Form):
   ingredienten = chosenforms.ChosenModelMultipleChoiceField(overlay="Selecteer ingredienten...",queryset=Ingredient.objects.order_by('naam'))

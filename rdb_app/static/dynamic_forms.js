@@ -5,11 +5,11 @@ function updateElementIndex(el, prefix, index) {
   if (el.name) el.name = el.name.replace(regex, replacement);
 }
 
-function addForm(btn, prefix){
+function addForm(btn, prefix, classname){
   var formCount = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
-  var row = $('.dynamic-form:last').clone();
+  var row = $('.'+classname+':last').clone();
   // Copy the last dynamic-form element, and paste it under the last element.
-  $(row).insertAfter($('.dynamic-form:last'))
+  $(row).insertAfter($('.'+classname+':last'))
   // Edit the id's of every tag in the cloned element
   $(row).find('*').each(function(){
     updateElementIndex(this, prefix, formCount);
@@ -27,13 +27,13 @@ function addForm(btn, prefix){
   // Update the total number of forms
   $('#id_' + prefix + '-TOTAL_FORMS').val(formCount + 1);
   // Make the remove row button visible and active
-  $(row).find('a.remove-row').css('display','').on('click', function(event){removeForm(this,'form')});
+  $(row).find('a:last').css('display','').on('click', function(event){removeForm(this,'form',classname)});
   return false;
 };
 
-function removeForm(button, prefix){
-  $(button).parents('.dynamic-form').remove();
-  var forms = $('.dynamic-form');
+function removeForm(button, prefix, classname){
+  $(button).parents('.'+classname).remove();
+  var forms = $('.'+classname);
   $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
   for (var i=0, formCount=forms.length; i<formCount; i++){
     $(forms.get(i)).find('*').each(function(){

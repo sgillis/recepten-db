@@ -24,13 +24,28 @@
           <a href="javascript:void(0)" class="remove-row" style="display:none;">Verwijder ingredient</a>
         </p>
       {% endfor %}
-      <!-- <input type="submit" name="add" value="Add"> -->
       </div>
       <a href="javascript:void(0)" class="add-row">Voeg ingredient toe</a>
       </div>
     {% endif %}
+    {% if field.label == "Vegetarisch" %}
+      <div class="fieldwrapper">
+      <div class="dynamic-form-image">
+      {% for form in image_formset %}
+        <p>
+          {% for field in form %}
+            {{ field }}
+          {% endfor %}
+          <a href="javascript:void(0)" class="remove-row-image" style="display:none; float:right;">Verwijder foto</a>
+        </p>
+      {% endfor %}
+      </div>
+      <a href="javascript:void(0)" class="add-row-image">Voeg foto toe</a>
+      </div>
+    {% endif %}
   {% endfor %}
   {{ hoeveelheid_formset.management_form }}
+  {{ image_formset.management_form }}
   <div class="submitbutton">
   <input type="submit" name="submit_recipe" value="Toevoegen" style="float: right">
   </div>
@@ -49,10 +64,16 @@
                 $('.chzn-select-hoeveelheid').chosen({allow_single_deselect: true, no_results_text: "<a href='javascript:void(0)' id='no_results_text'>Voeg ingredient toe: </a><script type='text/javascript'>$('#no_results_text').click(ingredient_toevoegen);<\/script>"});
                 $('.chzn-select-type').chosen({no_results_text: "<a href='javascript:void(0)' id='no_results_text_type'>Voeg type gerecht toe: </a><script type='text/javascript'>$('#no_results_text_type').click(type_toevoegen);<\/script>"});
                 $('.add-row').click(function() {
-                        addForm(this, 'form');
+                        addForm(this, 'form', 'dynamic-form');
                 });
                 $('.remove-row').click(function() {
-                        removeForm(this, 'form');
+                        removeForm(this, 'form', 'dynamic-form');
+                });
+                $('.add-row-image').click(function() {
+                        addForm(this, 'image_form', 'dynamic-form-image');
+                });
+                $('.remove-row-image').click(function() {
+                        removeForm(this, 'image_form', 'dynamic-form-image');
                 });
         });
 </script>
