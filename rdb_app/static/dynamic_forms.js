@@ -94,7 +94,6 @@ var ingredient_submitted = function(result, status){
 
 // This function is called from the 'no_results_text' of 'chosen-select-hoeveelheid' class
 var ingredient_toevoegen = function(){
-  console.log('test');
   var ingredient_naam = $(this).parent().find('span').text();
   if (ingredient_naam!=""){
     var data = { ingredient_naam: ingredient_naam };
@@ -103,3 +102,25 @@ var ingredient_toevoegen = function(){
   }
   return false;
 };
+
+var type_toevoegen = function(){
+  var type_naam = $(this).parent().find('span').text();
+  if (type_naam!=''){
+    var data = { type_naam: type_naam };
+    var args = { type:"POST", url:"/type_toevoegen/", data:data, complete:type_submitted };
+    $.ajax(args);
+  }
+  return false;
+}
+
+var type_submitted = function(results, status){
+  if (status=="success"){
+    type = $.parseJSON(results.responseText)[0];
+    var pk = type.pk;
+    var type_naam = type.fields.doel;
+    $('#id_doel').append('<option value="'+pk+'">'+type_naam+'</option>');
+    $('.chzn-select-type').trigger('liszt:updated');
+    $('.chzn-with-drop').parent().find('select').val(pk).trigger("liszt:updated");
+    $('.chzn-with-drop').removeClass('chzn-with-drop');
+  }
+}

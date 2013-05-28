@@ -8,8 +8,8 @@ from django.http import HttpResponseRedirect, HttpResponseServerError, HttpRespo
 from django.core.serializers import serialize
 from django.utils import simplejson as json
 
-from rdb_app.forms import UserCreateForm, AuthenticateForm, ReceptForm, IngredientForm, HoeveelheidForm, SearchForm
-from rdb_app.models import Recept, Ingredient, Hoeveelheid, Foto
+from rdb_app.forms import UserCreateForm, AuthenticateForm, ReceptForm, IngredientForm, HoeveelheidForm, SearchForm, TypeForm
+from rdb_app.models import Recept, Ingredient, Hoeveelheid, Foto, Type
 
 def home(request, auth_form=None, user_form=None, search_form=None):
   """
@@ -86,12 +86,29 @@ def ingredient_toevoegen(request):
       return HttpResponseServerError('Error in ingredient_toevoegen.')
     if ingredient_form.is_valid():
       data = ingredient_form.cleaned_data
-      ingredient_naam = data['ingredient_naam'].lower()
+      ingredient_naam = data['ingredient_naam'][0].upper() + data['ingredient_naam'][1:].lower()
       ingredient_seizoen = data['ingredient_seizoen']
       # Check if the ingredient is already in the database
       if Ingredient.objects.filter(naam=ingredient_naam).count()==0:
         Ingredient.objects.create(naam=ingredient_naam, seizoen=ingredient_seizoen)
   return HttpResponse(serialize('json', (Ingredient.objects.latest('id'),)), mimetype="application/json")
+
+@login_required
+def type_toevoegen(request):
+  '''
+  Submit a new type
+  Should be called be AJAX
+  '''
+  if request.method=="POST":
+    try:
+      type_form = TypeForm(request.POST)
+    except:
+      return HttpResponseServerError('Error in type_toevoegen')
+    if type_form.is_valid():
+      data = type_form.cleaned_data
+      type_naam = data['type_naam'][0].upper() + data['type_naam'][1:].lower()
+      Type.objects.create(doel=type_naam)
+  return HttpResponse(serialize('json', (Type.objects.latest('id'),)), mimetype="application/json")
 
 @login_required
 def submit_recipe(request):

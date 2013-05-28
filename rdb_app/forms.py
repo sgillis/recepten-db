@@ -43,7 +43,7 @@ class ReceptForm(forms.Form):
   bereiding = forms.CharField(widget=forms.widgets.Textarea(attrs={'class':'ckeditor'}))
   def __init__(self, *args, **kwargs):
     super(ReceptForm, self).__init__(*args,**kwargs)
-    self.fields['doel'].widget.attrs.update({'label':'Type gerecht','style':'width:350px;'})
+    self.fields['doel'].widget.attrs.update({'label':'Type gerecht','style':'width:350px;','class':'chzn-select-type'})
     self.fields['seizoen'].widget.attrs.update({'style':'width:350px;'})
 
 class IngredientForm(forms.Form):
@@ -59,6 +59,9 @@ class HoeveelheidForm(forms.Form):
   def __init__(self, *args, **kwargs):
     super(HoeveelheidForm, self).__init__(*args, **kwargs)
     self.fields['ingredient'].widget.attrs.update({'class': 'chzn-select-hoeveelheid'})
+
+class TypeForm(forms.Form):
+  type_naam = forms.CharField()
 
 class SearchForm(forms.Form):
   ingredienten = chosenforms.ChosenModelMultipleChoiceField(overlay="Selecteer ingredienten...",queryset=Ingredient.objects.order_by('naam'))

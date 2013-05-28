@@ -47,6 +47,7 @@
                 $('.chzn-select').chosen();
                 $('.chzn-select-removable').chosen({allow_single_deselect: true});
                 $('.chzn-select-hoeveelheid').chosen({allow_single_deselect: true, no_results_text: "<a href='javascript:void(0)' id='no_results_text'>Voeg ingredient toe: </a><script type='text/javascript'>$('#no_results_text').click(ingredient_toevoegen);<\/script>"});
+                $('.chzn-select-type').chosen({no_results_text: "<a href='javascript:void(0)' id='no_results_text_type'>Voeg type gerecht toe: </a><script type='text/javascript'>$('#no_results_text_type').click(type_toevoegen);<\/script>"});
                 $('.add-row').click(function() {
                         addForm(this, 'form');
                 });

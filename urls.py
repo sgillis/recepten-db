@@ -19,6 +19,7 @@ urlpatterns = patterns('',
     url(r'^ingredienten/$', 'rdb_app.views.ingredienten', name='ingredienten'),
     url(r'^submit_recipe/$', 'rdb_app.views.submit_recipe', name='submit_recipe'),
     url(r'^ingredient_toevoegen/$', 'rdb_app.views.ingredient_toevoegen', name='ingredient_toevoegen'),
+    url(r'^type_toevoegen/$', 'rdb_app.views.type_toevoegen', name='type_toevoegen'),
 )
 
 if settings.DEBUG:
