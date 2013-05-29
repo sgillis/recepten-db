@@ -3,47 +3,69 @@
 {% block content %}
 
 <div class="panel">
-<h1>Recept {{ recept.naam }}</h1>
+  <h1>Recept {{ recept.naam }}</h1>
 
-{% for foto in recept.fotos.all %}
-<div>
-<img src={{ MEDIA_URL }}{{ foto.image.name }} width=250 style="float: center"/>
-</div>
-{% endfor %}
+  {% for foto in recept.fotos.all %}
+    <div>
+      <img src="{{ MEDIA_URL }}{{ foto.image.name }}" width=250 style="float: center"/>
+    </div>
+  {% endfor %}
 
-<div style="clear: both;">
-<strong>Informatie</strong>
-<ul>
-  <li>Door: {{ recept.user.username }}</li>
-  <li>Bereidingstijd: {{ recept.bereidingstijd }} min.</li>
-  <li>{{ recept.aantal_personen }} personen</li>
-  <li>{{ recept.doel.all|join:", " }}</li>
-  {% if recept.seizoen %}<li>Seizoen: {{ recept.seizoen }}</li>{% endif %}
-  {% if recept.vegetarisch %}<li>Vegatarisch</li>{% endif %}
-</ul>
-</div>
+  <div style="clear: both;">
+    <strong>Informatie</strong>
+    <ul>
+      <li>Door: {{ recept.user.username }}</li>
+      <li>Bereidingstijd: {{ recept.bereidingstijd }} min.</li>
+      <li>{{ recept.aantal_personen }} personen</li>
+      <li>{{ recept.doel.all|join:", " }}</li>
+      {% if recept.seizoen %}<li>Seizoen: {{ recept.seizoen }}</li>{% endif %}
+      {% if recept.vegetarisch %}<li>Vegetarisch</li>{% endif %}
+    </ul>
+  </div>
 
-<div>
-<strong>Ingredienten</strong>
-<p>
-	<ul>
-	{% for hoeveelheid in hoeveelheden %}
-		<li>
-		{{ hoeveelheid.ingredient }}
-		{{ hoeveelheid.hoeveelheid }}
-		</li>
+  <div>
+    <strong>Ingredienten</strong>
+    <p>
+      <ul>
+        {% for hoeveelheid in hoeveelheden %}
+	  <li>{{ hoeveelheid.ingredient }}: {{ hoeveelheid.hoeveelheid }}</li>
 	{% endfor %}
-	</ul>
-</p>
+      </ul>
+    </p>
+  </div>
+
+  <div>
+    <strong>Bereiding</strong>
+    <p>{{ recept.bereiding|safe }}</p>
+  </div>
+
+  {% if user.pk == recept.user.pk %}
+  <ul class="nobullets">
+    <!-- Do this with form to counter CSRF attack -->
+    <li><a href="/edit_recipe/{{ recept.pk }}">Edit recipe</a></li>
+    <li><a href="javascrip.void(0)" id="delete">Delete recipe</a></li>
+  <ul>
+  <div class="dialog">
+    Delete this recipe?
+    <p>
+      <a href="/delete_recipe/{{ recept.pk }}" id="yes">Yes</a>
+      <a href="javascript.void(0)" id="no">No</a>
+    </p>
+  </div>
+  {% endif %}
 </div>
 
-<div>
-<strong>Bereiding</strong>
-<p>
-	{{ recept.bereiding|safe }}
-</p>
-</div>
-
-</div>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#delete').click(function(){
+    $('div.dialog').show();
+    return false;
+  });
+  $('#no').click(function(){
+    $('div.dialog').hide();
+    return false;
+  });
+});
+</script>
 
 {% endblock %}

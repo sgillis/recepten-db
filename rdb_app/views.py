@@ -194,3 +194,17 @@ def profile(request):
   recipes = get_list_or_404(Recept, user=request.user)
   context = { 'recipes': recipes }
   return render_to_response('profile.html', context_instance=RequestContext(request, context))
+
+@login_required
+def edit_recipe(request, recept_id):
+  if request.method == "POST":
+    # TODO: Handle submitted form
+    pass
+  recept = get_object_or_404(Recept, pk=recept_id)
+  context = { 'recept': recept }
+  return render_to_response('edit_recipe.html', context_instance=RequestContext(request, context))
+
+@login_required
+def delete_recipe(request, recept_id):
+  recept = Recept.objects.filter(user=request.user).get(pk=recept_id).delete()
+  return redirect('/')

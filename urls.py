@@ -19,6 +19,8 @@ urlpatterns = patterns('',
     url(r'^ingredienten/$', 'rdb_app.views.ingredienten', name='ingredienten'),
     url(r'^submit_recipe/$', 'rdb_app.views.submit_recipe', name='submit_recipe'),
     url(r'^profile/$', 'rdb_app.views.profile', name='profile'),
+    url(r'^edit_recipe/(?P<recept_id>\d+)/$', 'rdb_app.views.edit_recipe', name='edit_recipe'),
+    url(r'^delete_recipe/(?P<recept_id>\d+)/$', 'rdb_app.views.delete_recipe', name='delete_recipe'),
     # Ajax urls
     url(r'^ingredient_toevoegen/$', 'rdb_app.views.ingredient_toevoegen', name='ingredient_toevoegen'),
     url(r'^type_toevoegen/$', 'rdb_app.views.type_toevoegen', name='type_toevoegen'),
