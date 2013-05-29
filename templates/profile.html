@@ -4,7 +4,7 @@
 
 <div class="itemlist">
   <h2>Submitted recipes</h2>
-  <ul>
+  <ul class="nobullets">
   {% for recipe in recipes %}
     <li><a href="/recept/{{ recipe.pk }}">{{ recipe.naam }}</a></li>
   {% endfor %}
