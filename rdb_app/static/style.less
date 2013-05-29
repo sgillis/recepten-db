@@ -57,6 +57,64 @@ input[type="submit"] {
 	.gradient4f(0%, #8CD585, 23%, #82CD7A, 86%, #55AD4C, 100%, #4FA945);
 }
 
+span.arrow{
+  border-color:#C0C0C0 transparent white;
+  border-style:solid dashed dashed;
+  margin-left:10px;
+  position:relative;
+  top:12px;
+}
+
+div.dropdown {
+  position: relative;
+  width: 150px;
+  &.account {
+    top: -24px;
+    left: 800px;
+    font-size: 18px;
+    margin-right: 10px;
+  }
+  a.user {
+    z-index: 101;
+    width: 150px;
+    position: absolute;
+    left: 5px;
+    span.arrow {
+      position: absolute;
+      top: 8px;
+      margin: 0 0 0 5px;
+    }
+  }
+}
+
+div.submenu {
+  z-index: 100;
+  position: absolute;
+  top: -12px;
+  padding: 40px 0px 10px 0px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+  width: 150px;
+  display: none;
+  ul.root {
+    font-size: 16px;
+    background: white;
+    list-style: none;
+    text-align: left;
+    margin: 0 0 0 0;
+    padding: 10px 0 0 0;
+    border-top: 1px solid @border-color;
+    li a {
+      display: block;
+      padding: 6px 0 6px 5px;
+    }
+    li a:hover {
+      background: #7BC574;
+      color: white;
+    }
+  }
+}
+
 a {
 	text-decoration: none;
 	&:hover {

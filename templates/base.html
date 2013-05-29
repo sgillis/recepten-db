@@ -10,6 +10,19 @@
   <script src="{{ STATIC_URL }}jquery.masonry.min.js"></script>
   <script src="{{ STATIC_URL }}ckeditor/ckeditor.js"></script>
   <script src="http://lesscss.googlecode.com/files/less-1.3.0.min.js"></script>
+  <script type="text/javascript">
+  $(document).ready(function(){
+    $(".user").click(function(){
+      $("div.submenu").toggle();
+    });
+    $(document).click(function(e){
+      var $target= $(e.target);
+      if(! $target.parents().hasClass("dropdown") ){
+        $("div.submenu").hide();
+      }
+    });
+  });
+  </script>
   {% block scripts %}
   {% endblock %}
   <title>Recepten database</title>
@@ -23,9 +36,15 @@
       <span><a href="/">Home</a></span>
       <span class="spacing"><a href="/toevoegen">Recept toevoegen</a></span>
       <span class="spacing"><a href="/ingredienten/">Ingredienten</a></span>
-      <form action="/logoutview">
-        <input type="submit" id="btnLogout" value="Log out">
-      </form>
+      <div class="dropdown account">
+        <a class="user">{{ user|capfirst }}<span class="arrow"></span></a>
+        <div class="submenu">
+          <ul class="root">
+            <li><a href="/profile/">Profile</a></li>
+            <li><a href="/logoutview/">Log out</a></li>
+          </ul>
+        </div>
+      </div>
       {% endblock %}
     </div>
   </header>
