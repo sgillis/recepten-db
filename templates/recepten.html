@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Welcome {{ user|capfirst }}!</h2>
-<div>
+<div class="search">
+  Selecteer op basis van ingredienten:
   <form enctype="multipart/form-data" method="POST">{% csrf_token %}
   {% for field in search_form %}
     {{ field }}
