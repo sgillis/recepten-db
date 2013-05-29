@@ -179,6 +179,18 @@ def ingredient(request, ingredient_id):
 
 @login_required
 def ingredienten(request):
+  '''
+  View a list of all ingredients
+  '''
   ingredienten = Ingredient.objects.all()
   context = {'ingredienten': ingredienten}
   return render_to_response('ingredienten.html', context_instance=RequestContext(request, context))
+
+@login_required
+def profile(request):
+  '''
+  User profile page
+  '''
+  recipes = get_list_or_404(Recept, user=request.user)
+  context = { 'recipes': recipes }
+  return render_to_response('profile.html', context_instance=RequestContext(request, context))

@@ -18,6 +18,8 @@ urlpatterns = patterns('',
     url(r'^ingredient/(?P<ingredient_id>\d+)/$', 'rdb_app.views.ingredient', name='ingredient'),
     url(r'^ingredienten/$', 'rdb_app.views.ingredienten', name='ingredienten'),
     url(r'^submit_recipe/$', 'rdb_app.views.submit_recipe', name='submit_recipe'),
+    url(r'^profile/$', 'rdb_app.views.profile', name='profile'),
+    # Ajax urls
     url(r'^ingredient_toevoegen/$', 'rdb_app.views.ingredient_toevoegen', name='ingredient_toevoegen'),
     url(r'^type_toevoegen/$', 'rdb_app.views.type_toevoegen', name='type_toevoegen'),
 )

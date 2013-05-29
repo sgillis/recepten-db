@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="itemlist">
+  <h2>Submitted recipes</h2>
+  <ul>
+  {% for recipe in recipes %}
+    <li><a href="/recept/{{ recipe.pk }}">{{ recipe.naam }}</a></li>
+  {% endfor %}
+  </ul>
+</div>
+
+{% endblock %}

@@ -2,8 +2,8 @@
 
 {% block content %}
 
-<div class="panel left">
-<h1>Ingredienten</h1>
+<div class="itemlist">
+<h2>Ingredienten</h2>
 {% for ingredient in ingredienten %}
 <div>
 <a href="/ingredient/{{ ingredient.id }}">{{ ingredient.naam|capfirst }}</a>
