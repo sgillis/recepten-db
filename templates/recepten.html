@@ -62,20 +62,18 @@ $(function(){
         });
 </script>
 
+<!-- AJAX loading of recipes -->
 <script type="text/javascript">
 $('#id_ingredienten').change(function() {
   url = $('#id_ingredienten').val();
   if (url == null) {
     url = "/"
   }
-	$('#container').load(url + ' #container', 
-	function(){
-		var $container = $('#container');
-		$container.imagesLoaded(
-		function() {
-		  $container.masonry({itemSelector: '.recept'});
+	$('#container').load(url+' #container',
+	  function() {
+	  	var $container = $('#container');
+	  	$container.masonry({itemSelector: '.recept'});
 		});
-	});
 });
 </script>
 {% endblock %}
