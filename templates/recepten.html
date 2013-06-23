@@ -64,7 +64,18 @@ $(function(){
 
 <script type="text/javascript">
 $('#id_ingredienten').change(function() {
-	alert("Iets veranderd in de ingredienten!");
+  url = $('#id_ingredienten').val();
+  if (url == null) {
+    url = "/"
+  }
+	$('#container').load(url + ' #container', 
+	function(){
+		var $container = $('#container');
+		$container.imagesLoaded(
+		function() {
+		  $container.masonry({itemSelector: '.recept'});
+		});
+	});
 });
 </script>
 {% endblock %}
