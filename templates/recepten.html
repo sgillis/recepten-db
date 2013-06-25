@@ -71,8 +71,7 @@ $('#id_ingredienten').change(function() {
   }
 	$('#container').load(url+' #container',
 	  function() {
-	  	var $container = $('#container');
-	  	$container.masonry({itemSelector: '.recept'});
+	  	jQuery('#container').masonry('reload');
 		});
 });
 </script>
