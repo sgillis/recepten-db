@@ -11,9 +11,10 @@
 </div>
 <div id="container">
   {% for recept in recepten %}
-  <a href="/recept/{{ recept.id }}" class="recepttitel">
     <div class="recept">
+      <a href="/recept/{{ recept.id }}" class="recepttitel">
       <div><h2 class="recepttitel">{{ recept.naam }}</h2></div>
+      </a>
       
       {% if recept.photoAvailable %}
       {% with recept.getAnyPhoto as foto %}
@@ -38,7 +39,6 @@
       	</tr>
       </table>
     </div>
-  </a>
   {% endfor %}
 </div>
 
@@ -69,10 +69,13 @@ $('#id_ingredienten').change(function() {
   if (url == null) {
     url = "/"
   }
+  $('#container').masonry('remove', $('.recept'));
 	$('#container').load(url+' #container',
-	  function() {
-	  	jQuery('#container').masonry('reload');
+	  function(responseText, textStatus, XMLHttpRequest) {
+	  	$('#container').masonry('appended', $('.recept'));
+	  	$('#container').masonry();
 		});
 });
 </script>
+
 {% endblock %}
