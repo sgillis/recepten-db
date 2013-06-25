@@ -73,7 +73,9 @@ $('#id_ingredienten').change(function() {
 	$('#container').load(url+' #container',
 	  function(responseText, textStatus, XMLHttpRequest) {
 	  	$('#container').masonry('appended', $('.recept'));
-	  	$('#container').masonry();
+	  	$('#container').imagesLoaded( function() {
+  	  	$('#container').masonry();
+  	  });
 		});
 });
 </script>
