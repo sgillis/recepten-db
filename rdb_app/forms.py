@@ -43,7 +43,7 @@ class ReceptForm(forms.Form):
   def __init__(self, *args, **kwargs):
     super(ReceptForm, self).__init__(*args,**kwargs)
     self.fields['doel'].widget.attrs.update({'label':'Type gerecht','style':'width:350px;','class':'chzn-select-type'})
-    self.fields['seizoen'].widget.attrs.update({'style':'width:350px;'})
+    self.fields['seizoen'].widget.attrs.update({'class': 'chzn-select-seizoen', 'style':'width:350px;'})
 
 class IngredientForm(forms.Form):
   ingredient_naam = forms.CharField(widget=forms.widgets.TextInput(attrs={'placeholder': 'Naam'}))
@@ -57,13 +57,17 @@ class HoeveelheidForm(forms.Form):
   hoeveelheid = forms.CharField(widget=forms.widgets.TextInput(attrs={'placeholder': 'Hoeveelheid'}))
   def __init__(self, *args, **kwargs):
     super(HoeveelheidForm, self).__init__(*args, **kwargs)
-    self.fields['ingredient'].widget.attrs.update({'class': 'chzn-select-hoeveelheid'})
+    self.fields['ingredient'].widget.attrs.update({'class': 'chzn-select-hoeveelheid', 'style': 'width:62%'})
 
 class TypeForm(forms.Form):
   type_naam = forms.CharField()
 
 class ImageForm(forms.Form):
   foto = forms.ImageField(required=False)
+  
+  def __init__(self, *args, **kwargs):
+    super(ImageForm, self).__init__(*args, **kwargs)
+    self.fields['foto'].widget.attrs.update({'style': 'width: 70%',})
 
 class SearchForm(forms.Form):
   ingredienten = chosenforms.ChosenModelMultipleChoiceField(\

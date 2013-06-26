@@ -58,24 +58,64 @@
 <!-- OWN SCRIPTS -->
 <script src="{{ STATIC_URL }}dynamic_forms.js" type="text/javascript"></script>
 <script type="text/javascript"> 
-        $(document).ready(function(){
-                $('.chzn-select').chosen();
-                $('.chzn-select-removable').chosen({allow_single_deselect: true});
-                $('.chzn-select-hoeveelheid').chosen({allow_single_deselect: true, no_results_text: "<a href='javascript:void(0)' id='no_results_text'>Voeg ingredient toe: </a><script type='text/javascript'>$('#no_results_text').click(ingredient_toevoegen);<\/script>"});
-                $('.chzn-select-type').chosen({no_results_text: "<a href='javascript:void(0)' id='no_results_text_type'>Voeg type gerecht toe: </a><script type='text/javascript'>$('#no_results_text_type').click(type_toevoegen);<\/script>"});
-                $('.add-row').click(function() {
-                        addForm(this, 'form', 'dynamic-form');
-                });
-                $('.remove-row').click(function() {
-                        removeForm(this, 'form', 'dynamic-form');
-                });
-                $('.add-row-image').click(function() {
-                        addForm(this, 'image_form', 'dynamic-form-image');
-                });
-                $('.remove-row-image').click(function() {
-                        removeForm(this, 'image_form', 'dynamic-form-image');
-                });
-        });
+$(document).ready(function(){
+  $('.chzn-select').chosen();
+  $('.chzn-select-removable').chosen({allow_single_deselect: true});
+  $('.chzn-select-hoeveelheid').chosen({allow_single_deselect: true, no_results_text: "<a href='javascript:void(0)' id='no_results_text'>Voeg ingredient toe: </a><script type='text/javascript'>$('#no_results_text').click(ingredient_toevoegen);<\/script>"});
+  $('.chzn-select-type').chosen({allow_single_deselect: true, no_results_text: "<a href='javascript:void(0)' id='no_results_text_type'>Voeg type gerecht toe: </a><script type='text/javascript'>$('#no_results_text_type').click(type_toevoegen);<\/script>"});
+  $('.chzn-select-seizoen').chosen({allow_single_deselect: true});
+  
+  
+  $('.add-row').click(function() {
+    addForm(this, 'form', 'dynamic-form');
+  });
+  $('.remove-row').click(function() {
+    removeForm(this, 'form', 'dynamic-form');
+  });
+  $('.add-row-image').click(function() {
+    addForm(this, 'image_form', 'dynamic-form-image');
+  });
+  $('.remove-row-image').click(function() {
+    removeForm(this, 'image_form', 'dynamic-form-image');
+  });
+});
+</script>
+
+<!-- Configuring the CKEditor instance of "id_bereiding" -->
+<script type="text/javascript">
+CKEDITOR.replace( 'id_bereiding', {
+	toolbar: [
+	  { name: 'clipboard', groups: [ 'clipboard', 'undo' ], items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
+	  { name: 'editing', groups: [ 'find', 'selection'] },
+	  { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
+	  { name: 'insert', items: [ 'Image', 'Table', 'HorizontalRule'] },
+	  { name: 'document', groups: [ 'mode', 'document', 'doctools' ], items: [ 'Source' ] },
+	  { name: 'tools', items: [ 'Maximize' ] },
+	  { name: 'others', items: [ '-' ] },
+	  '/',
+	  { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: [ 'Bold', 'Italic', 'Strike', '-', 'RemoveFormat' ] },
+	  { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote' ] },
+	  { name: 'styles', items: [ 'Styles', 'Format' ] },
+	  { name: 'about', items: [ 'About' ] }
+	],
+
+  // Toolbar groups configuration.
+  toolbarGroups: [
+  	{ name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+  	{ name: 'editing', groups: [ 'find', 'selection', 'spellchecker' ] },
+  	{ name: 'links' },
+  	{ name: 'insert' },
+  	{ name: 'forms' },
+  	{ name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+  	{ name: 'tools' },
+  	{ name: 'others' },
+  	'/',
+  	{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+  	{ name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
+  	{ name: 'styles' },
+  	{ name: 'colors' },
+  	{ name: 'about' }
+]});
 </script>
 
 {% endblock %}
