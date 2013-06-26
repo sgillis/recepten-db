@@ -207,9 +207,35 @@ def submit_recipe(request):
   return toevoegen(request, recept_form=recept_form, hoeveelheid_formset=hoeveelheid_formset, image_formset=image_formset)
 
 @login_required
-def recept(request, recept_id):
+def recept(request, recept_id, personen=None):  
+  # Fetch recipe and quantities
   recept = get_object_or_404(Recept, pk=recept_id)
-  hoeveelheden = get_list_or_404(Hoeveelheid, recept=Recept.objects.get(pk=recept_id))
+  hoeveelheden = \
+    get_list_or_404(Hoeveelheid, recept=Recept.objects.get(pk=recept_id))
+  
+  # If a number of persons is given, adjust the quantities
+  if personen != None:
+    # Conversion factor
+    factor = float(personen) / float(recept.aantal_personen)
+    
+    for hoeveelheid in hoeveelheden:
+      # Get the number out
+      m = re.search("[0-9\.,]+", hoeveelheid.hoeveelheid)
+      
+      if m != None:
+        # Convert number
+        num = float(m.group()) * factor
+        if num.is_integer():
+          num = "%d" % num
+        else:
+          num = "%.1f" % num
+        
+        # Put it back
+        hoeveelheid.hoeveelheid = \
+          re.sub("[0-9\.,]+", num, hoeveelheid.hoeveelheid)
+        
+  
+  # Passing values and render
   context = {'recept': recept, 'hoeveelheden': hoeveelheden}
   return render_to_response('recept.html', context_instance=RequestContext(request, context))
 

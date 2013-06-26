@@ -26,10 +26,13 @@
   <div>
     <strong>Ingredienten</strong>
     <p>
-      <ul>
+      Aantal personen: <input type="text" id="aantal_personen" value={{ recept.aantal_personen }} /> <input type="button" id="changenumpersons" value="Pas aan" />
+    </p>
+    <p>
+      <ul id="ingredientenlijst">
         {% for hoeveelheid in hoeveelheden %}
-	  <li>{{ hoeveelheid.ingredient }}: {{ hoeveelheid.hoeveelheid }}</li>
-	{% endfor %}
+          <li class="quantity">{{ hoeveelheid.ingredient }}: {{ hoeveelheid.hoeveelheid }}</li>
+        {% endfor %}
       </ul>
     </p>
   </div>
@@ -64,6 +67,20 @@ $(document).ready(function(){
   $('#no').click(function(){
     $('div.dialog').hide();
     return false;
+  });
+});
+</script>
+
+<!-- Changing the quantities of the ingredients based on the number of 
+persons entered -->
+<script type="text/javascript">
+$(document).ready(function() {
+  $('#changenumpersons').click(function() {
+    var numPersons = $('#aantal_personen').val();
+    if (numPersons != null && numPersons != "") {
+      var url = "/recept/"+ {{recept.pk}} +"/personen="+numPersons+"/";
+      $('#ingredientenlijst').load(url + " li.quantity")
+    }
   });
 });
 </script>
