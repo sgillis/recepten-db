@@ -7,13 +7,14 @@ from django.shortcuts import render_to_response, get_object_or_404, get_list_or_
 from django.http import HttpResponseRedirect, HttpResponseServerError, HttpResponse
 from django.core.serializers import serialize
 from django.utils import simplejson as json
+from django.db.models import Q
 
 import re
 
 from rdb_app.forms import UserCreateForm, AuthenticateForm, ReceptForm, IngredientForm, HoeveelheidForm, SearchForm, TypeForm, ImageForm
 from rdb_app.models import Recept, Ingredient, Hoeveelheid, Foto, Type
 
-def home(request, ingredienten_ids, auth_form=None, user_form=None, search_form=None):
+def home(request, ingredienten_ids=None, types_ids=None, seizoenen=None, vegetarisch=None, tijd=None, auth_form=None, user_form=None, search_form=None):
   """
   Homepage
   """
@@ -25,14 +26,44 @@ def home(request, ingredienten_ids, auth_form=None, user_form=None, search_form=
     
     # Are there ingredients requested?
     ingredienten = list()		# Default empty list
-    if ingredienten_ids != "":
+    if ingredienten_ids != None and ingredienten_ids != "":
       ingredienten = re.sub("/$", "", ingredienten_ids).split(",")
+    
+    # Are there types requested?
+    types = list()          # Default empty list
+    if types_ids != None and types_ids != "":
+       types = types_ids.split(",")
+    
+    # Is a season requested?
+    seizoen = list()        # Default empty list
+    if seizoenen != None and seizoenen != "":
+      seizoen = seizoenen.split(",")
+    
+    # All recipes
+    recipes = Recept.objects.all()
     
     # Retrieve all recipes containing the desired ingredients
     recipes = reduce(lambda recipes, ingredient: \
       recipes.filter(ingredienten__id__exact=ingredient), \
       ingredienten, \
-      Recept.objects.all())
+      recipes)
+    
+    # Retrieve all recipes of the desired types
+    recipes = reduce(lambda recipes, t: recipes.filter(doel__id__exact=t), \
+      types, recipes)
+    
+    # Retrieve all recipes in the desired season (or without season)
+    recipes = reduce(lambda recipes, s: \
+      recipes.filter(Q(seizoen=s)|Q(seizoen__isnull=True)|Q(seizoen="")),\
+      seizoen, recipes)
+    
+    # Retrieve only vegetarian recipes if requested
+    if vegetarisch != None:
+      recipes = recipes.filter(vegetarisch="1")
+    
+    # Retrieve only recipes faster than requested time
+    if tijd != None:
+      recipes = recipes.filter(bereidingstijd__lt=tijd)
     
     return render(request,"recepten.html",
                   {'recepten': recipes,

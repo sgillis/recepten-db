@@ -66,7 +66,28 @@ class ImageForm(forms.Form):
   foto = forms.ImageField(required=False)
 
 class SearchForm(forms.Form):
-  ingredienten = chosenforms.ChosenModelMultipleChoiceField(overlay="Selecteer ingredienten...",queryset=Ingredient.objects.order_by('naam'))
+  ingredienten = chosenforms.ChosenModelMultipleChoiceField(\
+    overlay="Selecteer ingredienten...", \
+    queryset=Ingredient.objects.order_by('naam'))
+  types = chosenforms.ChosenModelMultipleChoiceField(\
+    overlay="Selecteer type gerecht ...",\
+    queryset=Type.objects.order_by('doel'))
+  seizoenen = chosenforms.ChosenChoiceField(\
+    overlay="Selecteer seizoen ...",\
+    choices=SEIZOENEN)
+  tijd = chosenforms.ChosenChoiceField(\
+    overlay="Selecteer tijd ...",\
+    choices=(\
+      ('', ' '), \
+      ("15", "< 15 minuten"), \
+      ("30", "< 30 minuten"), \
+      ("45", "< 45 minuten"), \
+      ("60", "< 60 minuten")))
+  vegetarisch = forms.BooleanField(help_text="Vegetarisch?")
+  
   def __init__(self, *args, **kwargs):
     super(SearchForm, self).__init__(*args, **kwargs)
     self.fields['ingredienten'].widget.attrs.update({'style': 'width:350px;',})
+    self.fields['types'].widget.attrs.update({'style': 'width:350px',})
+    self.fields['seizoenen'].widget.attrs.update({'style': 'width:350px',})
+    self.fields['tijd'].widget.attrs.update({'style': 'width:350px',})

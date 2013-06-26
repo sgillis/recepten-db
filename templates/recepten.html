@@ -2,10 +2,16 @@
 
 {% block content %}
 <div class="search">
-  Selecteer op basis van ingredienten:
+  <h2>Filter recepten</h2>
   <form enctype="multipart/form-data" method="POST">{% csrf_token %}
   {% for field in search_form %}
-    {{ field }}
+    <div class="searchformfield">
+    {% if field.help_text != "" %}
+      <table><tr><td>{{ field.help_text }}</td><td>{{ field }}</td></tr></table>
+    {% else %}
+      {{ field }}
+    {% endif %}
+    </div>
   {% endfor %}
   </form>
 </div>
@@ -42,42 +48,73 @@
   {% endfor %}
 </div>
 
-<!-- MASONRY -->
+<!-- MASONRY & CHANGES -->
 <script>
 $(function(){
-		var $container = $('#container');
-		$container.imagesLoaded( function() {
-				$container.masonry({
-						itemSelector: '.recept'
-				});
-		});
+  var $container = $('#container');
+  $container.imagesLoaded( function() {
+    $container.masonry({itemSelector: '.recept'});
+    $('#id_ingredienten').change(loadRecipes);
+    $('#id_types').change(loadRecipes);
+    $('#id_seizoenen').change(loadRecipes);
+    $('#id_tijd').change(loadRecipes);
+    $('#id_vegetarisch').change(loadRecipes);
+  });
 });
 </script>
 
 <!-- CHOSEN -->
 <script src="{{ STATIC_URL }}chosen.jquery.js" type="text/javascript"></script>
 <script type="text/javascript"> 
-        $(document).ready(function(){
-                $('.chzn-select').chosen();
-        });
+$(document).ready(function(){
+  $('.chzn-select').chosen({allow_single_deselect:true});
+});
 </script>
 
 <!-- AJAX loading of recipes -->
 <script type="text/javascript">
-$('#id_ingredienten').change(function() {
-  url = $('#id_ingredienten').val();
-  if (url == null) {
-    url = "/"
+function loadRecipes() {
+  // Start with plain url
+  url = "/";
+  
+  // For each selector
+  var ingredienten_ids = $('#id_ingredienten').val();
+  if (ingredienten_ids != null) {
+    url += "ingredients="+ingredienten_ids+"/";
   }
+  
+  var type_ids = $('#id_types').val();
+  if (type_ids != null) {
+    url += "types="+type_ids+"/";
+  }
+  
+  var seizoenen = $('#id_seizoenen').val();
+  if (seizoenen != null && seizoenen != "") {
+    url += "seizoenen="+seizoenen+"/";
+  }
+  
+  var tijd = $('#id_tijd').val();
+  if (tijd != null && tijd != "") {
+    url += "tijd="+tijd+"/";
+  }
+  
+  if ($('#id_vegetarisch:checked').length == 1) {
+    url += "vegetarisch/";
+  }
+  
+  // Removing recipes from masonry and DOM
   $('#container').masonry('remove', $('.recept'));
+  
+  // Loading new recipes via AJAX
 	$('#container').load(url+' #container',
 	  function(responseText, textStatus, XMLHttpRequest) {
 	  	$('#container').masonry('appended', $('.recept'));
 	  	$('#container').imagesLoaded( function() {
   	  	$('#container').masonry();
   	  });
-		});
-});
+		}
+	);
+}
 </script>
 
 {% endblock %}
