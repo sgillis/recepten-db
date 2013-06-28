@@ -26,6 +26,7 @@ urlpatterns = patterns('',
     url(r'^type_toevoegen/$', 'rdb_app.views.type_toevoegen', name='type_toevoegen'),
     url(r'^addnote/$', 'rdb_app.views.add_note', name='nota_toevoegen'),
     url(r'^deletenote/$', 'rdb_app.views.delete_note', name='nota_verwijderen'),
+    url(r'^deleteimage/$', 'rdb_app.views.delete_image', name='foto_verwijderen'),
 )
 
 if settings.DEBUG:

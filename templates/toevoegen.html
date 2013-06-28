@@ -33,10 +33,10 @@
       <div class="fieldwrapper">
       <!-- Show present images if we are editing -->
       {% for foto in recept.fotos.all %}
-        <div>
-          <img src="{{ MEDIA_URL }}{{ foto.image.name }}" width=250 style="float: center"/>
+        <div style="float: left" id="foto-{{ foto.pk }}" class="foto">
+          <img src="{{ MEDIA_URL }}{{ foto.image.name }}" width=250/>
+          <input type="button" value="Verwijder foto" onclick="verwijderImage({{ foto.pk }})" />
         </div>
-        <input type="submit" name="verwijder_foto" value="Verwijder foto" style="float: right">
       {% endfor %}
       <div class="dynamic-form-image">
       {% for form in image_formset %}
@@ -87,6 +87,16 @@ $(document).ready(function(){
     removeForm(this, 'image_form', 'dynamic-form-image');
   });
 });
+
+function verwijderImage(image_id) {
+    jQuery.ajax({
+      url: '/deleteimage/',
+      data: {id: image_id},
+      success: function(data, textStatus, jqXHR) {
+        $('#foto-'+image_id).remove()
+      }
+  });
+}
 </script>
 
 <!-- Configuring the CKEditor instance of "id_bereiding" -->

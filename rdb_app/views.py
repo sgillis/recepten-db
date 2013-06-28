@@ -326,3 +326,10 @@ def delete_note(request):
   else:
     return home()
 
+@login_required
+def delete_image(request):
+  if request.method == "GET":
+    image_id = request.GET["id"]
+    image = get_object_or_404(Foto, pk=image_id)
+    image.delete()
+  return redirect('/')
