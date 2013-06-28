@@ -47,7 +47,10 @@
     <div id="notas">
     {% if notas|length > 0 %}
     {% for nota in notas %}
-      <div class="nota">{{ nota|safe }}</div>
+      <div id="nota-{{nota.pk}}" class="nota">
+      {{ nota|safe }}
+      <input type="button" value="Verwijder" onclick="verwijderNota({{nota.pk}})" />
+      </div>
     {% endfor %}
     {% endif %}
     </div>
@@ -117,6 +120,16 @@ $('#submitnote').click(function() {
     }
   });
 });
+
+function verwijderNota(nota_id) {
+  jQuery.ajax({
+    url: '/deletenote/',
+    data: {id: nota_id},
+    success: function(data, textStatus, jqXHR) {
+      $('#nota-'+nota_id).remove()
+    }
+  });
+}
 </script>
 
 {% endblock %}

@@ -1,3 +1,4 @@
-<div class="nota">
+<div id="nota-{{nota.pk}}" class="nota">
 {{nota|safe}}
+<input type="button" value="Verwijder" onclick="verwijderNota({{nota.pk}})" />
 </div>

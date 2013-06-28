@@ -237,7 +237,7 @@ def recept(request, recept_id, personen=None):
   
   # Look for notes on this recipes by the requesting user
   notes = Nota.objects.filter(user=request.user).filter(recept__pk__exact=recept_id)
-  print(notes)
+  
   # Passing values and render
   context = {'recept': recept, 'hoeveelheden': hoeveelheden, 'notas': notes}
   return render_to_response('recept.html', context_instance=RequestContext(request, context))
@@ -292,12 +292,23 @@ def add_note(request):
     nota = request.POST['nota']
     
     # Trying to store the new note
-    r = get_object_or_404(Recept, pk= recept_id)
+    r = get_object_or_404(Recept, pk=recept_id)
     n = Nota(user=request.user, recept=r, nota=nota)
     n.save()
     
     # Return note
     return render(request, "note.html", {'nota': nota})
+  else:
+    return home()
     
-  
+@csrf_exempt
+@login_required
+def delete_note(request):
+  if request.method == "GET":
+    nota_id = request.GET["id"]
+    nota = get_object_or_404(Nota, pk=nota_id)
+    nota.delete()
+    return render(request, "note.html", {'note': ""})  # dummy response
+  else:
+    return home()
 
