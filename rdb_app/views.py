@@ -222,8 +222,7 @@ def submit_recipe(request):
 def recept(request, recept_id, personen=None):  
   # Fetch recipe and quantities
   recept = get_object_or_404(Recept, pk=recept_id)
-  hoeveelheden = \
-  get_list_or_404(Hoeveelheid, recept=Recept.objects.get(pk=recept_id))
+  hoeveelheden =   Hoeveelheid.objects.filter(recept=recept)
   
   # If a number of persons is given, adjust the quantities
   if personen != None:
