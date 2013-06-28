@@ -263,7 +263,7 @@ def profile(request):
   '''
   User profile page
   '''
-  recipes = get_list_or_404(Recept, user=request.user)
+  recipes = Recept.objects.filter(user=request.user)
   context = { 'recipes': recipes }
   return render_to_response('profile.html', context_instance=RequestContext(request, context))
 
