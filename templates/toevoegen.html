@@ -16,16 +16,16 @@
     </div>
     {% if field.label == "Recept naam" %}
       <div class="fieldwrapper">
-      <div class="dynamic-form">
       {% for form in hoeveelheid_formset %}
+        <div class="dynamic-form">
         <p>
           {% for field in form %}
             {{ field }}
           {% endfor %}
-          <a href="javascript:void(0)" class="remove-row" style="display:none;">Verwijder ingredient</a>
+          <a href="javascript:void(0)" class="remove-row">Verwijder ingredient</a>
         </p>
+        </div>
       {% endfor %}
-      </div>
       <a href="javascript:void(0)" class="add-row">Voeg ingredient toe</a>
       </div>
     {% endif %}
