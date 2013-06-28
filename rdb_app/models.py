@@ -77,7 +77,6 @@ class Nota(models.Model):
   nota = models.TextField()
   
   def __unicode__(self):
-    return self.user.__unicode__() +" zegt over "+ self.recept.__unicode__() +\
-            ": "+self.nota
+    return self.nota
   
 

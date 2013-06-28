@@ -24,6 +24,7 @@ urlpatterns = patterns('',
     # Ajax urls
     url(r'^ingredient_toevoegen/$', 'rdb_app.views.ingredient_toevoegen', name='ingredient_toevoegen'),
     url(r'^type_toevoegen/$', 'rdb_app.views.type_toevoegen', name='type_toevoegen'),
+    url(r'^addnote/$', 'rdb_app.views.add_note', name='nota_toevoegen'),
 )
 
 if settings.DEBUG:
