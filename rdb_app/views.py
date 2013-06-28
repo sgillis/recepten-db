@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.forms.formsets import formset_factory
+from django.forms.models import model_to_dict
 from django.template.context import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404, get_list_or_404
 from django.http import HttpResponseRedirect, HttpResponseServerError, HttpResponse
@@ -107,9 +108,9 @@ def logoutview(request):
   return redirect('/')
 
 @login_required
-def toevoegen(request, recept_form=None, hoeveelheid_formset=None, image_formset=None):
+def toevoegen(request, recept_form=None, hoeveelheid_formset=None, image_formset=None, recept=None):
   '''
-  Generates the page and forms used to submit a recipe
+  Generates the page and forms used to submit a recipe and edit it
   '''
   recept_form = recept_form or ReceptForm()
   HoeveelheidFormset = formset_factory(HoeveelheidForm)
@@ -164,6 +165,7 @@ def submit_recipe(request):
   '''
   Handle a submitted recipe form
   '''
+  print request.POST
   HoeveelheidFormset = formset_factory(HoeveelheidForm)
   ImageFormset = formset_factory(ImageForm)
   if request.method=='POST' and 'submit_recipe' in request.POST:
@@ -176,16 +178,24 @@ def submit_recipe(request):
       if hoeveelheid_formset.is_valid():
         data = recept_form.cleaned_data
         hoeveelheid_data = hoeveelheid_formset.cleaned_data
-        recept = Recept.objects.create(naam=data['recept_naam'],
-                                       user=request.user,
-                                       bereidingstijd=data['bereidingstijd'],
-                                       aantal_personen=data['aantalpersonen'],
-                                       bereiding=data['bereiding'],
-                                       seizoen=data['seizoen'],
-                                       vegetarisch=data['vegetarisch'])
+        if request.POST['pk']==-1:
+          recept = Recept()
+        else:
+          recept = Recept.objects.get(pk=request.POST['pk'])
+          # Remove present doel and hoeveelheden, to avoid duplicates, wrong information
+          Hoeveelheid.objects.filter(recept=recept).delete()
+          for doel in recept.doel.all():
+            recept.doel.remove(doel)
+        recept.naam = data['naam']
+        recept.user = request.user
+        recept.bereidingstijd = data['bereidingstijd']
+        recept.aantal_personen = data['aantal_personen']
+        recept.bereiding = data['bereiding']
+        recept.seizoen = data['seizoen']
+        recept.vegetarisch = data['vegetarisch']
         if image_formset.is_valid():
           for (i, f) in enumerate(request.FILES.keys()):
-            foto = Foto.objects.create(image=request.FILES[f], naam=data['recept_naam']+'image_' + str(i))
+            foto = Foto.objects.create(image=request.FILES[f], naam=data['naam']+'image_' + str(i))
             recept.fotos.add(foto)
         if 'doel' in request.POST:
           recept.doel.add(request.POST['doel'])
@@ -196,6 +206,7 @@ def submit_recipe(request):
                                            ingredient=h_data['ingredient'])
           except:
             continue
+        recept.save()
         return redirect('/')
       else:
         # TODO: Return some useful error message.
@@ -269,12 +280,16 @@ def profile(request):
 
 @login_required
 def edit_recipe(request, recept_id):
-  if request.method == "POST":
-    # TODO: Handle submitted form
-    pass
   recept = get_object_or_404(Recept, pk=recept_id)
-  context = { 'recept': recept }
-  return render_to_response('edit_recipe.html', context_instance=RequestContext(request, context))
+  d = model_to_dict(recept)
+  d.update({'doel': recept.doel.all()[0].pk})
+  receptform = ReceptForm(initial=d)
+  HoeveelheidFormset = formset_factory(HoeveelheidForm)
+  hoeveelheid_formset = HoeveelheidFormset(initial=[model_to_dict(hoeveelheid) for hoeveelheid in Hoeveelheid.objects.filter(recept=recept)])
+  ImageFormset = formset_factory(ImageForm)
+  image_formset = ImageFormset(prefix="image_form")
+  context = { 'recept_form': receptform, 'hoeveelheid_formset': hoeveelheid_formset, 'image_formset': image_formset, 'recept': recept }
+  return render_to_response('toevoegen.html', context_instance=RequestContext(request, context))
 
 @login_required
 def delete_recipe(request, recept_id):

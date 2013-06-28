@@ -4,6 +4,7 @@
 <div class="panel left">
 <h1>Recept toevoegen</h1>
 <form enctype="multipart/form-data" method="POST" action="/submit_recipe/">{% csrf_token %}
+  <input type="hidden" value={% if recept %}{{ recept.pk }}{% else %}-1{% endif %} name="pk">
   {% for field in recept_form %}
     <div class="fieldwrapper">
     {{ field.label }}
@@ -30,6 +31,13 @@
     {% endif %}
     {% if field.label == "Vegetarisch" %}
       <div class="fieldwrapper">
+      <!-- Show present images if we are editing -->
+      {% for foto in recept.fotos.all %}
+        <div>
+          <img src="{{ MEDIA_URL }}{{ foto.image.name }}" width=250 style="float: center"/>
+        </div>
+        <input type="submit" name="verwijder_foto" value="Verwijder foto" style="float: right">
+      {% endfor %}
       <div class="dynamic-form-image">
       {% for form in image_formset %}
         <p>
