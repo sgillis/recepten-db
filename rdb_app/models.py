@@ -25,17 +25,17 @@ class Recept(models.Model):
   def __unicode__(self):
     return self.naam
     
-    def photoAvailable(self):
-      """
-      Is er een foto bij dit recept?
-      """
-      return self.fotos.count() > 0
-      
-    def getAnyPhoto(self):
-      """
-      Geef een foto terug (default: de eerste foto)
-      """
-      return self.fotos.all()[0]
+  def photoAvailable(self):
+    """
+    Is er een foto bij dit recept?
+    """
+    return self.fotos.count() > 0
+    
+  def getAnyPhoto(self):
+    """
+    Geef een foto terug (default: de eerste foto)
+    """
+    return self.fotos.all()[0]
       
 class Ingredient(models.Model):
   naam = models.CharField(max_length=180)
@@ -71,5 +71,13 @@ class Foto(models.Model):
   def __unicode__(self):
     return self.naam
     
-    
+class Nota(models.Model):
+  user = models.ForeignKey(User)
+  recept = models.ForeignKey(Recept)
+  nota = models.TextField()
+  
+  def __unicode__(self):
+    return self.user.__unicode__() +" zegt over "+ self.recept.__unicode__() +\
+            ": "+self.nota
+  
 
