@@ -12,7 +12,7 @@
   {% endfor %}
 
   <div style="clear: both;">
-    <strong>Informatie</strong>
+    <h3>Informatie</h3>
     <ul>
       <li>Door: {{ recept.user.username }}</li>
       <li>Bereidingstijd: {{ recept.bereidingstijd }} min.</li>
@@ -24,7 +24,7 @@
   </div>
 
   <div>
-    <strong>Ingredienten</strong>
+    <h3>Ingredienten</h3>
     <p>
       Aantal personen: <input type="text" id="aantal_personen" value={{ recept.aantal_personen }} /> <input type="button" id="changenumpersons" value="Pas aan" />
     </p>
@@ -38,10 +38,29 @@
   </div>
 
   <div>
-    <strong>Bereiding</strong>
+    <h3>Bereiding</h3>
     <p>{{ recept.bereiding|safe }}</p>
   </div>
-
+  
+  <div>
+    <h3>Nota's</h3>
+    <div id="notas">
+    {% if notas|length > 0 %}
+    {% for nota in notas %}
+      <div id="nota-{{nota.pk}}" class="nota">
+      {{ nota|safe }}
+      <input type="button" value="Verwijder" onclick="verwijderNota({{nota.pk}})" />
+      </div>
+    {% endfor %}
+    {% endif %}
+    </div>
+    
+    <form> {% csrf_token %}
+      <textarea id="nota" class="ckeditor"></textarea>
+      <p><input id="submitnote" type="button" value="Voeg Nota Toe" /></p>
+    </form>
+  </div>
+  
   {% if user.pk == recept.user.pk %}
   <ul class="nobullets">
     <!-- Do this with form to counter CSRF attack -->
@@ -83,6 +102,34 @@ $(document).ready(function() {
     }
   });
 });
+</script>
+
+<!-- Submitting the note -->
+<script type="text/javascript">
+$('#submitnote').click(function() {
+  var nota = CKEDITOR.instances['nota'].getData()
+  jQuery.ajax({
+    url: "/addnote/",
+    success: function(data, textStatus, jqXHR) {
+      $('#notas').append(data);
+    },
+    type: "POST",
+    data: {
+      recept_id: {{recept.pk}},
+      nota: nota,
+    }
+  });
+});
+
+function verwijderNota(nota_id) {
+  jQuery.ajax({
+    url: '/deletenote/',
+    data: {id: nota_id},
+    success: function(data, textStatus, jqXHR) {
+      $('#nota-'+nota_id).remove()
+    }
+  });
+}
 </script>
 
 {% endblock %}

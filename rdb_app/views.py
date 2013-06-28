@@ -9,11 +9,12 @@ from django.http import HttpResponseRedirect, HttpResponseServerError, HttpRespo
 from django.core.serializers import serialize
 from django.utils import simplejson as json
 from django.db.models import Q
+from django.views.decorators.csrf import csrf_exempt
 
 import re
 
 from rdb_app.forms import UserCreateForm, AuthenticateForm, ReceptForm, IngredientForm, HoeveelheidForm, SearchForm, TypeForm, ImageForm
-from rdb_app.models import Recept, Ingredient, Hoeveelheid, Foto, Type
+from rdb_app.models import Recept, Ingredient, Hoeveelheid, Foto, Type, Nota
 
 def home(request, ingredienten_ids=None, types_ids=None, seizoenen=None, vegetarisch=None, tijd=None, auth_form=None, user_form=None, search_form=None):
   """
@@ -29,17 +30,17 @@ def home(request, ingredienten_ids=None, types_ids=None, seizoenen=None, vegetar
     ingredienten = list()		# Default empty list
     if ingredienten_ids != None and ingredienten_ids != "":
       ingredienten = re.sub("/$", "", ingredienten_ids).split(",")
-    
+      
     # Are there types requested?
     types = list()          # Default empty list
     if types_ids != None and types_ids != "":
-       types = types_ids.split(",")
-    
+      types = types_ids.split(",")
+      
     # Is a season requested?
     seizoen = list()        # Default empty list
     if seizoenen != None and seizoenen != "":
       seizoen = seizoenen.split(",")
-    
+      
     # All recipes
     recipes = Recept.objects.all()
     
@@ -61,21 +62,21 @@ def home(request, ingredienten_ids=None, types_ids=None, seizoenen=None, vegetar
     # Retrieve only vegetarian recipes if requested
     if vegetarisch != None:
       recipes = recipes.filter(vegetarisch="1")
-    
+      
     # Retrieve only recipes faster than requested time
     if tijd != None:
       recipes = recipes.filter(bereidingstijd__lt=tijd)
-    
+      
     return render(request,"recepten.html",
-                  {'recepten': recipes,
-                   'user': user,
-                   'search_form': search_form, } )
-  # If not logged in
+      {'recepten': recipes,
+        'user': user,
+      'search_form': search_form, } )
+    # If not logged in
   else:
     auth_form = auth_form or AuthenticateForm()
     user_form = user_form or UserCreateForm()
     return render(request,"home.html", {'auth_form': auth_form, 'user_form': user_form, })
-
+    
 def signup(request):
   """
   Sign up a new user
@@ -91,8 +92,8 @@ def signup(request):
       return redirect('/')
     else:
       return home(request, user_form=user_form)
-  return render(request, "home.html", { 'user_form': user_form, })
-
+      return render(request, "home.html", { 'user_form': user_form, })
+      
 def loginview(request):
   if request.method=="POST":
     form = AuthenticateForm(data=request.POST)
@@ -101,12 +102,12 @@ def loginview(request):
       return redirect('/')
     else:
       return home(request, auth_form=form)
-  return redirect('/')
-
+      return redirect('/')
+      
 def logoutview(request):
   logout(request)
   return redirect('/')
-
+  
 @login_required
 def toevoegen(request, recept_form=None, hoeveelheid_formset=None, image_formset=None, recept=None):
   '''
@@ -118,11 +119,11 @@ def toevoegen(request, recept_form=None, hoeveelheid_formset=None, image_formset
   ImageFormset = formset_factory(ImageForm)
   image_formset = image_formset or ImageFormset(prefix="image_form")
   context = { 'recept_form': recept_form,
-              'hoeveelheid_formset': hoeveelheid_formset,
-              'image_formset': image_formset,
-              'user': request.user, }
+    'hoeveelheid_formset': hoeveelheid_formset,
+    'image_formset': image_formset,
+  'user': request.user, }
   return render(request, 'toevoegen.html', context)
-
+  
 @login_required
 def ingredient_toevoegen(request):
   '''
@@ -134,15 +135,15 @@ def ingredient_toevoegen(request):
       ingredient_form = IngredientForm(request.POST)
     except:
       return HttpResponseServerError('Error in ingredient_toevoegen.')
-    if ingredient_form.is_valid():
-      data = ingredient_form.cleaned_data
-      ingredient_naam = data['ingredient_naam'][0].upper() + data['ingredient_naam'][1:].lower()
-      ingredient_seizoen = data['ingredient_seizoen']
-      # Check if the ingredient is already in the database
-      if Ingredient.objects.filter(naam=ingredient_naam).count()==0:
-        Ingredient.objects.create(naam=ingredient_naam, seizoen=ingredient_seizoen)
-  return HttpResponse(serialize('json', (Ingredient.objects.latest('id'),)), mimetype="application/json")
-
+      if ingredient_form.is_valid():
+        data = ingredient_form.cleaned_data
+        ingredient_naam = data['ingredient_naam'][0].upper() + data['ingredient_naam'][1:].lower()
+        ingredient_seizoen = data['ingredient_seizoen']
+        # Check if the ingredient is already in the database
+        if Ingredient.objects.filter(naam=ingredient_naam).count()==0:
+          Ingredient.objects.create(naam=ingredient_naam, seizoen=ingredient_seizoen)
+          return HttpResponse(serialize('json', (Ingredient.objects.latest('id'),)), mimetype="application/json")
+          
 @login_required
 def type_toevoegen(request):
   '''
@@ -154,12 +155,12 @@ def type_toevoegen(request):
       type_form = TypeForm(request.POST)
     except:
       return HttpResponseServerError('Error in type_toevoegen')
-    if type_form.is_valid():
-      data = type_form.cleaned_data
-      type_naam = data['type_naam'][0].upper() + data['type_naam'][1:].lower()
-      Type.objects.create(doel=type_naam)
-  return HttpResponse(serialize('json', (Type.objects.latest('id'),)), mimetype="application/json")
-
+      if type_form.is_valid():
+        data = type_form.cleaned_data
+        type_naam = data['type_naam'][0].upper() + data['type_naam'][1:].lower()
+        Type.objects.create(doel=type_naam)
+        return HttpResponse(serialize('json', (Type.objects.latest('id'),)), mimetype="application/json")
+        
 @login_required
 def submit_recipe(request):
   '''
@@ -222,7 +223,7 @@ def recept(request, recept_id, personen=None):
   # Fetch recipe and quantities
   recept = get_object_or_404(Recept, pk=recept_id)
   hoeveelheden = \
-    get_list_or_404(Hoeveelheid, recept=Recept.objects.get(pk=recept_id))
+  get_list_or_404(Hoeveelheid, recept=Recept.objects.get(pk=recept_id))
   
   # If a number of persons is given, adjust the quantities
   if personen != None:
@@ -240,16 +241,18 @@ def recept(request, recept_id, personen=None):
           num = "%d" % num
         else:
           num = "%.1f" % num
-        
+          
         # Put it back
         hoeveelheid.hoeveelheid = \
-          re.sub("[0-9\.,]+", num, hoeveelheid.hoeveelheid)
-        
+        re.sub("[0-9\.,]+", num, hoeveelheid.hoeveelheid)
+  
+  # Look for notes on this recipes by the requesting user
+  notes = Nota.objects.filter(user=request.user).filter(recept__pk__exact=recept_id)
   
   # Passing values and render
-  context = {'recept': recept, 'hoeveelheden': hoeveelheden}
+  context = {'recept': recept, 'hoeveelheden': hoeveelheden, 'notas': notes}
   return render_to_response('recept.html', context_instance=RequestContext(request, context))
-
+  
 @login_required
 def ingredient(request, ingredient_id):
   '''
@@ -259,7 +262,7 @@ def ingredient(request, ingredient_id):
   ingredient = get_object_or_404(Ingredient, pk=ingredient_id)
   context = {'ingredient': ingredient}
   return render_to_response('ingredient.html', context_instance=RequestContext(request, context))
-
+  
 @login_required
 def ingredienten(request):
   '''
@@ -268,7 +271,7 @@ def ingredienten(request):
   ingredienten = Ingredient.objects.all()
   context = {'ingredienten': ingredienten}
   return render_to_response('ingredienten.html', context_instance=RequestContext(request, context))
-
+  
 @login_required
 def profile(request):
   '''
@@ -277,7 +280,7 @@ def profile(request):
   recipes = Recept.objects.filter(user=request.user)
   context = { 'recipes': recipes }
   return render_to_response('profile.html', context_instance=RequestContext(request, context))
-
+  
 @login_required
 def edit_recipe(request, recept_id):
   recept = get_object_or_404(Recept, pk=recept_id)
@@ -295,3 +298,32 @@ def edit_recipe(request, recept_id):
 def delete_recipe(request, recept_id):
   recept = Recept.objects.filter(user=request.user).get(pk=recept_id).delete()
   return redirect('/')
+
+@csrf_exempt
+@login_required
+def add_note(request):
+  if request.method == "POST":
+    recept_id = request.POST['recept_id']
+    nota = request.POST['nota']
+    
+    # Trying to store the new note
+    r = get_object_or_404(Recept, pk=recept_id)
+    n = Nota(user=request.user, recept=r, nota=nota)
+    n.save()
+    
+    # Return note
+    return render(request, "note.html", {'nota': nota})
+  else:
+    return home()
+    
+@csrf_exempt
+@login_required
+def delete_note(request):
+  if request.method == "GET":
+    nota_id = request.GET["id"]
+    nota = get_object_or_404(Nota, pk=nota_id)
+    nota.delete()
+    return render(request, "note.html", {'note': ""})  # dummy response
+  else:
+    return home()
+
