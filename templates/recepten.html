@@ -19,8 +19,9 @@
   {% for recept in recepten %}
     <div class="recept">
       <a href="/recept/{{ recept.id }}" class="recepttitel">
+      <div class="innerrecept">
       <div><h2 class="recepttitel">{{ recept.naam }}</h2></div>
-      </a>
+      
       
       {% if recept.photoAvailable %}
       {% with recept.getAnyPhoto as foto %}
@@ -44,6 +45,8 @@
       		<td class="info">{{ recept.aantal_personen }} perso{{ recept.aantal_personen|pluralize:"on,nen" }}</td>
       	</tr>
       </table>
+      </div>
+      </a>
     </div>
   {% endfor %}
 </div>
