@@ -66,7 +66,10 @@ def home(request, ingredienten_ids=None, types_ids=None, seizoenen=None, vegetar
     # Retrieve only recipes faster than requested time
     if tijd != None:
       recipes = recipes.filter(bereidingstijd__lt=tijd)
-      
+    
+    # Ordering the recipes: Newest to oldest
+    recipes = recipes.order_by('-creation_date')
+    
     return render(request,"recepten.html",
       {'recepten': recipes,
         'user': user,
@@ -179,7 +182,7 @@ def submit_recipe(request):
       if hoeveelheid_formset.is_valid():
         data = recept_form.cleaned_data
         hoeveelheid_data = hoeveelheid_formset.cleaned_data
-        if request.POST['pk']==-1:
+        if request.POST['pk']=="-1":
           recept = Recept()
         else:
           recept = Recept.objects.get(pk=request.POST['pk'])
@@ -194,6 +197,10 @@ def submit_recipe(request):
         recept.bereiding = data['bereiding']
         recept.seizoen = data['seizoen']
         recept.vegetarisch = data['vegetarisch']
+        
+        # Saving the recipe, before adding relations
+        recept.save()
+        
         if image_formset.is_valid():
           for (i, f) in enumerate(request.FILES.keys()):
             foto = Foto.objects.create(image=request.FILES[f], naam=data['naam']+'image_' + str(i))
@@ -207,7 +214,7 @@ def submit_recipe(request):
                                            ingredient=h_data['ingredient'])
           except:
             continue
-        recept.save()
+            
         return redirect('/')
       else:
         # TODO: Return some useful error message.

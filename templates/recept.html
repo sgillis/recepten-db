@@ -16,7 +16,6 @@
     <ul>
       <li>Door: {{ recept.user.username }}</li>
       <li>Bereidingstijd: {{ recept.bereidingstijd }} min.</li>
-      <li>{{ recept.aantal_personen }} personen</li>
       <li>{{ recept.doel.all|join:", " }}</li>
       {% if recept.seizoen %}<li>Seizoen: {{ recept.seizoen }}</li>{% endif %}
       {% if recept.vegetarisch %}<li>Vegetarisch</li>{% endif %}

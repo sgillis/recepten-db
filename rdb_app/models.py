@@ -12,7 +12,7 @@ SEIZOENEN = (
 class Recept(models.Model):
   naam = models.CharField(verbose_name="Naam",max_length=512)
   user = models.ForeignKey(User)
-  creation_date = models.DateTimeField(auto_now=True, blank=True)
+  creation_date = models.DateTimeField(auto_now=True)
   bereidingstijd = models.IntegerField()
   ingredienten = models.ManyToManyField('Ingredient', through='Hoeveelheid', related_name='contained_in', symmetrical=False) # gebruik contained_in om te vinden welke recepten een ingredient bevatten
   aantal_personen = models.IntegerField()
