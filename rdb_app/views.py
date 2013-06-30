@@ -130,19 +130,20 @@ def ingredient_toevoegen(request):
   Submit a new ingredient
   Should be called by AJAX
   '''
+  print request
   if request.method=="POST":
     try:
       ingredient_form = IngredientForm(request.POST)
     except:
       return HttpResponseServerError('Error in ingredient_toevoegen.')
-      if ingredient_form.is_valid():
-        data = ingredient_form.cleaned_data
-        ingredient_naam = data['ingredient_naam'][0].upper() + data['ingredient_naam'][1:].lower()
-        ingredient_seizoen = data['ingredient_seizoen']
-        # Check if the ingredient is already in the database
-        if Ingredient.objects.filter(naam=ingredient_naam).count()==0:
-          Ingredient.objects.create(naam=ingredient_naam, seizoen=ingredient_seizoen)
-          return HttpResponse(serialize('json', (Ingredient.objects.latest('id'),)), mimetype="application/json")
+    if ingredient_form.is_valid():
+      data = ingredient_form.cleaned_data
+      ingredient_naam = data['ingredient_naam'][0].upper() + data['ingredient_naam'][1:].lower()
+      ingredient_seizoen = data['ingredient_seizoen']
+      # Check if the ingredient is already in the database
+      if Ingredient.objects.filter(naam=ingredient_naam).count()==0:
+        Ingredient.objects.create(naam=ingredient_naam, seizoen=ingredient_seizoen)
+        return HttpResponse(serialize('json', (Ingredient.objects.latest('id'),)), mimetype="application/json")
           
 @login_required
 def type_toevoegen(request):
