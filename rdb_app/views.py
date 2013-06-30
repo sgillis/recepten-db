@@ -130,7 +130,6 @@ def ingredient_toevoegen(request):
   Submit a new ingredient
   Should be called by AJAX
   '''
-  print request
   if request.method=="POST":
     try:
       ingredient_form = IngredientForm(request.POST)
