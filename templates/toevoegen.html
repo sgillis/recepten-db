@@ -69,7 +69,7 @@
 $(document).ready(function(){
   $('.chzn-select').chosen();
   $('.chzn-select-removable').chosen({allow_single_deselect: true});
-  $('.chzn-select-hoeveelheid').chosen({allow_single_deselect: true, no_results_text: "<a href='javascript:void(0)' id='no_results_text'>Voeg ingredient toe: </a><script type='text/javascript'>$('#no_results_text').click(ingredient_toevoegen);<\/script>"});
+  $('.chzn-select-hoeveelheid').chosen({allow_single_deselect: true, always_show_no_result: true, no_results_text: "<a href='javascript:void(0)' id='no_results_text'>Voeg ingredient toe: </a><script type='text/javascript'>$('#no_results_text').click(ingredient_toevoegen);<\/script>"});
   $('.chzn-select-type').chosen({allow_single_deselect: true, no_results_text: "<a href='javascript:void(0)' id='no_results_text_type'>Voeg type gerecht toe: </a><script type='text/javascript'>$('#no_results_text_type').click(type_toevoegen);<\/script>"});
   $('.chzn-select-seizoen').chosen({allow_single_deselect: true});
   
