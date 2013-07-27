@@ -145,7 +145,7 @@ def ingredient_toevoegen(request):
       # Check if the ingredient is already in the database
       if Ingredient.objects.filter(naam=ingredient_naam).count()==0:
         Ingredient.objects.create(naam=ingredient_naam, seizoen=ingredient_seizoen)
-        return HttpResponse(serialize('json', (Ingredient.objects.latest('id'),)), mimetype="application/json")
+	  return HttpResponse(serialize('json', (Ingredient.objects.latest('id'),)), mimetype="application/json")
           
 @login_required
 def type_toevoegen(request):
