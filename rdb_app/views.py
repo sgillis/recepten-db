@@ -158,11 +158,11 @@ def type_toevoegen(request):
       type_form = TypeForm(request.POST)
     except:
       return HttpResponseServerError('Error in type_toevoegen')
-      if type_form.is_valid():
-        data = type_form.cleaned_data
-        type_naam = data['type_naam'][0].upper() + data['type_naam'][1:].lower()
-        Type.objects.create(doel=type_naam)
-        return HttpResponse(serialize('json', (Type.objects.latest('id'),)), mimetype="application/json")
+    if type_form.is_valid():
+      data = type_form.cleaned_data
+      type_naam = data['type_naam'][0].upper() + data['type_naam'][1:].lower()
+      Type.objects.create(doel=type_naam)
+      return HttpResponse(serialize('json', (Type.objects.latest('id'),)), mimetype="application/json")
         
 @login_required
 def submit_recipe(request):
